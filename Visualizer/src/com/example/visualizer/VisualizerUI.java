@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -72,7 +73,8 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
-
+import com.qbic.Listeners.MyBrowserWindowResizeListener;
+import com.qbic.Listeners.MySplitClickListener;
 
 @SuppressWarnings("serial")
 @Theme("liferay")
@@ -83,11 +85,11 @@ public class VisualizerUI extends UI {
 	public static class Servlet extends VaadinServlet {
 	}
 	
-	
 	private Panel layout;
 	HorizontalSplitPanel hsplit;
 	private Table table;
 	private List<File> folderToDelete;
+	public HashMap<String, BrowserFrame> frames;
 	private int h;
 	private int w;
 	/**
@@ -106,13 +108,32 @@ public class VisualizerUI extends UI {
 	 * @param w
 	 */
 	public void setSize(int h, int w){
-		layout.setHeight(this.intPixelToStringPixel(h));
-		float wTmp = (float) (0.95*(float)w);
-		System.out.println(w + " " + wTmp);
-		layout.setWidth(this.intPixelToStringPixel((int)wTmp));
-		System.out.println(layout.getHeight() + " " + layout.getWidth());
-		this.setH(h);
-		this.setW(w);
+		float newPanelW = (float) (0.95*(float)w);
+		float newPanelH = (float) (0.95*(float)h);
+		layout.setWidth(this.intPixelToStringPixel((int)newPanelW));
+		layout.setHeight(this.intPixelToStringPixel((int)newPanelH));
+		float newHsplitW = newPanelW;//(float) (0.95*(float)newPanelW);
+		float newHsplitH = (float) (0.95*(float)newPanelH);
+		this.hsplit.setWidth(this.intPixelToStringPixel((int)newHsplitW));
+		this.hsplit.setHeight(this.intPixelToStringPixel((int)newHsplitH));
+		
+		
+		float newFrameH = (float) (0.95*(float)newHsplitH);
+		float current = hsplit.getSplitPosition() - hsplit.getMinSplitPosition();
+		float max = hsplit.getMaxSplitPosition() - hsplit.getMinSplitPosition();
+		float percent = current/this.hsplit.getWidth();
+		System.out.println("setSize: current,width,percent" + current + "," + this.hsplit.getWidth() + "," + percent);
+		percent = 1f - percent;
+		float newFrameW = Math.max(newHsplitW*percent,1);
+		this.h = (int) newFrameH;
+		this.w = (int) newFrameW;
+		System.out.println("setSize: current,max,percent" + current + "," + max + "," + percent);
+		System.out.println("splith,splitw: "+ newHsplitH + ","+ newHsplitW);
+		System.out.println("h,w: "+ this.h + ","+ this.w);
+		for(BrowserFrame frame: this.frames.values()){
+			frame.setWidth(this.intPixelToStringPixel((int)newFrameW));
+			frame.setHeight(this.intPixelToStringPixel((int)newFrameH));
+		}
 	}
 	
 	@Override
@@ -128,58 +149,55 @@ public class VisualizerUI extends UI {
 		table.addValueChangeListener(new Property.ValueChangeListener() {
 		    @Override
 			public void valueChange(ValueChangeEvent event) {
-				System.out.println(event.getProperty().getValue());
-				String d_type = (String)table.getItem(event.getProperty().getValue()).getItemProperty("Data Set Type").getValue();
-				if(d_type.toLowerCase().equals("zip")){
 			    	String datasetCode = (String)table.getItem(event.getProperty().getValue()).getItemProperty("CODE").getValue();
-					String datasetType = (String)table.getItem(event.getProperty().getValue()).getItemProperty("Name").getValue();
-					//VerticalLayout tab = new VerticalLayout();
-					//tab.addComponent(new Label(datasetCode));
-					//tab.addComponent(new Label(datasetType));
-					String fastqc = ((VisualizerUI) UI.getCurrent()).getFastQC(datasetCode);
-					ThemeResource themeResource = new ThemeResource(fastqc);
-					BrowserFrame browser = new BrowserFrame(" : " , themeResource);//baseDirFile ); //new ExternalResource(url) /*For some reason the file is not shown :/*
-					System.out.println("UI.getCurrent().getContent() width: " + UI.getCurrent().getContent().getWidth() +", UI.getCurrent() height " + UI.getCurrent().getContent().getHeight());
-					System.out.println("Before change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
-					browser.setWidth(((VisualizerUI)UI.getCurrent()).getW(),Sizeable.UNITS_PIXELS);
-					browser.setHeight(((VisualizerUI)UI.getCurrent()).getH()-1,Sizeable.UNITS_PIXELS);
-					System.out.println("After change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
-					//tab.addComponent(browser);
-					//tab.setWidth("100%");
-					//tab.setHeight("100%");
-					tabsheet.addComponent(browser);			
-					tabsheet.getTab(browser).setClosable(true);
-					tabsheet.getTab(browser).setCaption("Fastq Quality Control");
-					tabsheet.setSelectedTab(browser);
-					//tabsheet.getTab(tab).setClosable(true);
-					//tabsheet.setSelectedTab(tab);
-				}
+			    	VisualizerUI ui =(VisualizerUI) UI.getCurrent();
+					if(!ui.frames.containsKey(datasetCode)){
+				    	String fastqc = ui.getFastQC(datasetCode);
+						ThemeResource themeResource = new ThemeResource(fastqc);
+						BrowserFrame browser = new BrowserFrame("" , themeResource);//baseDirFile ); //new ExternalResource(url) /*For some reason the file is not shown :/*
+						System.out.println("UI.getCurrent().getContent() width: " + UI.getCurrent().getContent().getWidth() +", UI.getCurrent() height " + UI.getCurrent().getContent().getHeight());
+						System.out.println("Before change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
+						browser.setWidth(((VisualizerUI)UI.getCurrent()).getW(),Sizeable.UNITS_PIXELS);
+						browser.setHeight(((VisualizerUI)UI.getCurrent()).getH()-1,Sizeable.UNITS_PIXELS);
+						System.out.println("After change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
+						ui.frames.put(datasetCode, browser);
+						//tab.addComponent(browser);
+						//tab.setWidth("100%");
+						//tab.setHeight("100%");
+						tabsheet.addComponent(browser);			
+						tabsheet.getTab(browser).setClosable(true);
+						tabsheet.getTab(browser).setCaption("Fastq Quality Control");
+						tabsheet.setSelectedTab(browser);
+						//tabsheet.getTab(tab).setClosable(true);
+						//tabsheet.setSelectedTab(tab);
+					}
+					else{
+						BrowserFrame frame = ui.frames.get(datasetCode);
+						Tab tab = tabsheet.getTab(frame);
+						if(tab == null){
+							tabsheet.addComponent(frame);			
+							tabsheet.getTab(frame).setClosable(true);
+							tabsheet.getTab(frame).setCaption("Fastq Quality Control");
+						}
+						tabsheet.setSelectedTab(frame);
+					}
 
-				/*tabsheet.setCloseHandler(new CloseHandler() {
-				    @Override
-				    public void onTabClose(TabSheet tabsheet,
-				                           Component tabContent) {
-				        Tab tab = tabsheet.getTab(tabContent);
-				        Notification.show("Closing " + tab.getCaption());
-				        
-				        // We need to close it explicitly in the handler
-				        tabsheet.removeTab(tab);
-				    }
-				});*/
-		    }
+    	    }
 		});
-		
 		hsplit.setFirstComponent(this.table);
 		hsplit.setSecondComponent(tabsheet);
+		hsplit.addSplitterClickListener(new MySplitClickListener());
 		float wTmp = (float) this.layout.getWidth();
-		wTmp *= 0.25; 
+		wTmp *= 0.25;
 		hsplit.setSplitPosition(wTmp, this.layout.getWidthUnits());
 	}
 	
 	private void buildMainLayout(){
 		this.layout = new Panel("Quality Control Panel");
-		this.setSize(this.getPage().getBrowserWindowHeight(),this.getPage().getBrowserWindowWidth());
 		hsplit = new HorizontalSplitPanel();
+		this.frames = new HashMap<String,BrowserFrame>();
+		this.setSize(this.getPage().getBrowserWindowHeight(),this.getPage().getBrowserWindowWidth());
+
 		layout.setContent(hsplit);
 		this.setContent(layout);
 		//Use full size of the browser 
@@ -515,17 +533,18 @@ public class VisualizerUI extends UI {
 	public void setW(int w) {
 		this.w = w;
 	}
-
-
-	class MyBrowserWindowResizeListener implements BrowserWindowResizeListener{
-		@Override
-		public void browserWindowResized(BrowserWindowResizeEvent event) {
-			// TODO Auto-generated method stub
-			System.out.println("browser width: " + event.getWidth() + " browser height: " + event.getHeight());
-			VisualizerUI ui = (VisualizerUI)UI.getCurrent();
-			ui.setSize(event.getHeight(),event.getWidth());
-		}	
+	public void setBrowserWidth(float newFrameW) {
+		this.w = (int) newFrameW;
+		for(BrowserFrame frame: this.frames.values()){
+			frame.setWidth(this.intPixelToStringPixel((int)newFrameW));
+		}
+		
+		System.out.println("splith,splitw: "+ hsplit.getHeight() + ","+ hsplit.getWidth());
+		System.out.println("h,w: "+ h + ","+ w);
 	}
+
+
+
 	
 	/*	
 	FilesystemContainer docs = new FilesystemContainer(new File("/home/guseuser/dummyDropbox/ALL_GS1000692_fastqc"));
