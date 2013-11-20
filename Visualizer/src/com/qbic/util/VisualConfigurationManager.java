@@ -14,11 +14,8 @@ public class VisualConfigurationManager {
     public static final String DATASOURCE_KEY = "datasource";
     public static final String DATASOURCE_USER = "datasource.user"; 
     public static final String DATASOURCE_PASS = "datasource.password"; 
-    public static final String DATASOURCE_URL = "datasource.url"; 
-    public static final String DSSCLIENTCMD = "dss.client";
-    public static final String UNZIPCMD = "unzip";
-    public static final String CLEANUP = "clean.up";
-    public static final String THEME = "theme";
+    public static final String DATASOURCE_URL = "datasource.url";
+    public static final String THEME_FODLER = "themeFolder";
     
     private static Logger log = new Logger(ConfigurationManager.class);
     private static VisualConfigurationManager INSTANCE = new VisualConfigurationManager();
@@ -29,10 +26,7 @@ public class VisualConfigurationManager {
     private String dataSourceUser;
     private String dataSourcePass;
     private String dataSourceURL;
-    private String dssClientCmd;
-    private String unzipCmd;
-    private String cleanUpCmd;
-    private String theme;
+    private String themeFolder;
     
     
     private VisualConfigurationManager()  {
@@ -43,13 +37,10 @@ public class VisualConfigurationManager {
 	//configurationFileName = portletConfig.getProperty(serverName + CONFIGURATION_SUFFIX);
 	//if(configurationFileName == null) {
 	    configurationFileName = portletConfig.getProperty("default" + CONFIGURATION_SUFFIX);
+	    themeFolder = portletConfig.getProperty(THEME_FODLER + CONFIGURATION_SUFFIX);
 	 //   log.warn("No configfile path found for host " + " @TODO "+", using default "+configurationFileName);
 	//}
 	try {
-		dssClientCmd = config.getProperty(DSSCLIENTCMD + CONFIGURATION_SUFFIX);
-		unzipCmd = config.getProperty(UNZIPCMD + CONFIGURATION_SUFFIX);
-		cleanUpCmd  = config.getProperty(CLEANUP + CONFIGURATION_SUFFIX);
-	    theme = config.getProperty(THEME + CONFIGURATION_SUFFIX);
 		config.load(new FileReader(configurationFileName));
 	    StringWriter configDebug = new StringWriter();
 	    config.list( new PrintWriter(configDebug));
@@ -69,7 +60,6 @@ public class VisualConfigurationManager {
 	return INSTANCE;
     }
 
- 
     public String getConfigurationFileName() {
 	return configurationFileName;
     }
@@ -90,20 +80,8 @@ public class VisualConfigurationManager {
     	return dataSourceURL;
     }
     
-    public String getDSSClientCmd() {
-	return dssClientCmd;
-    }
-    
-    public String getUnzipCmd() {
-	return unzipCmd;
-    }
-    
-    public String getCleanUpCmd() {
-	return cleanUpCmd;
-    }
-    
-    public String getTheme(){
-    	return theme;
+    public String getThemeFolder(){
+    	return themeFolder;
     }
 }
 

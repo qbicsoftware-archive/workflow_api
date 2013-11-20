@@ -35,6 +35,7 @@ import com.qbic.openbismodel.OpenBisClient;
 import com.qbic.util.CommandLine;
 import com.qbic.util.ConfigurationManager;
 import com.qbic.util.DashboardUtil;
+import com.qbic.util.VisualConfigurationManager;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property;
@@ -69,17 +70,18 @@ public class VisualizerUI extends UI {
 	public HashMap<String, BrowserFrame> frames;
 	private int h;
 	private int w;
-
+	String liferayScreenName;
 	
 	@Override
 	protected void init(VaadinRequest request) {
+		//getliferay screen name. It will be used to get only the datasets from projects that user is allowed to see.
+		initLiferayScreenName(request);
 		//initialize main layout
 		this.buildMainLayout();
 		this.folderToDelete = new ArrayList<File>();
 		//initialize table
-		this.setTable(request);
+		this.setTable();
 		final TabSheet tabsheet = new TabSheet();
-		System.out.println("hsplit width: " + this.hsplit.getWidth() +", hsplit height " + this.hsplit.getHeight() +" split position" + this.hsplit.getSplitPosition());
 		table.addValueChangeListener(new Property.ValueChangeListener() {
 		    @Override
 			public void valueChange(ValueChangeEvent event) {
@@ -125,21 +127,7 @@ public class VisualizerUI extends UI {
 	
 	private void buildMainLayout(){
 		this.layout = new Panel("Quality Control Panel");
-		//hsplit = new HorizontalSplitPanel();
-		this.hsplit =new MyHorizontalSplitPanel();/* new HorizontalSplitPanel() {
-			{ registerRpc(new AbstractSplitPanelRpc() { 
-				@Override 
-				public void setSplitterPosition(float position) { 
-					// Do your magic here 
-
-					} 
-				@Override 
-				public void splitterClick(MouseEventDetails mouseDetails) { 
-						// TODO Auto-generated method stub 
-						} 
-					}); 
-			}
-		}; */
+		this.hsplit =new MyHorizontalSplitPanel();
 			
 		
 		this.frames = new HashMap<String,BrowserFrame>();
@@ -170,20 +158,17 @@ public class VisualizerUI extends UI {
 	}
 	
 	private String getFastQC(String datasetCode){
-		//VisualConfigurationManager manager = VisualConfigurationManager.getInstance();
-		//IOpenbisServiceFacade facade = OpenbisServiceFacadeFactory.tryCreate(manager.getDataSourceUser(), manager.getDataSourcePassword(), "https://qbis.informatik.uni-tuebingen.de:8443/openbis", 60000);
-		OpenBisClient openbisClient = new OpenBisClient("wojnar", "opk49x3z", "https://qbis.informatik.uni-tuebingen.de:8443/openbis", true);
+		VisualConfigurationManager manager = VisualConfigurationManager.getInstance();
+		OpenBisClient openbisClient = new OpenBisClient(manager.getDataSourceUser(),manager.getDataSourcePassword(), manager.getDataSourceURL(), false);
 		IOpenbisServiceFacade facade = openbisClient.getFacade();
 		DataSet dataset = facade.getDataSet(datasetCode);
 
 		FileInfoDssDTO[] filelist = dataset.listFiles("original", false);
 
-		System.out.println("getPathInListing: " +  filelist[0].getPathInListing() + "; getPathInDataSet: " + filelist[0].getPathInDataSet());
-		System.out.println("getExternalDataSetCode: " + dataset.getExternalDataSetCode()  + " ; getExternalDataSetLink: " +  dataset.getExternalDataSetLink() + " ; tryGetInternalPathInDataStore: " + dataset.getDataSetDss().tryGetInternalPathInDataStore());
+		//System.out.println("getPathInListing: " +  filelist[0].getPathInListing() + "; getPathInDataSet: " + filelist[0].getPathInDataSet());
+		//System.out.println("getExternalDataSetCode: " + dataset.getExternalDataSetCode()  + " ; getExternalDataSetLink: " +  dataset.getExternalDataSetLink() + " ; tryGetInternalPathInDataStore: " + dataset.getDataSetDss().tryGetInternalPathInDataStore());
 
-		InputStream streamy = dataset.getFile(/*"/" + dataset.getDataSetDss().tryGetInternalPathInDataStore() + "/" +*/  filelist[0].getPathInDataSet());
-		//DownloadStream tmp = new DownloadStream(streamy,"attachment",datasetType);
-		///System.out.println(tmp.getStream().toString());
+		InputStream streamy = dataset.getFile(  filelist[0].getPathInDataSet());
 		openbisClient.logout();
 		
 		
@@ -192,7 +177,7 @@ public class VisualizerUI extends UI {
         
         // open the zip file stream
         ZipInputStream stream = new ZipInputStream(streamy);
-        String outdir = "/home/guseuser/guse/apache-tomcat-6.0.36/webapps/ROOT/html/VAADIN/themes/liferay";// + datasetCode;
+        String outdir = manager.getThemeFolder();// + datasetCode;
         String ret = "";
         try
         {
@@ -284,17 +269,15 @@ public class VisualizerUI extends UI {
 		
 	}
 	
-	private void setTable(VaadinRequest request){
+	private void initLiferayScreenName(VaadinRequest request){
 		
-		ConfigurationManager manager = ConfigurationManager.getInstance();
 		Map userInfoMap = (Map)  request.getAttribute(PortletRequest.USER_INFO);
     	//explode city gots to figure out how to deal with it not being in the map
-    	String locationId = (String) userInfoMap.get("liferay.location.id");
-    	String companyId = (String) userInfoMap.get("liferay.company.id");
+    	//String locationId = (String) userInfoMap.get("liferay.location.id");
+    	//String companyId = (String) userInfoMap.get("liferay.company.id");
     	String userName = (String) userInfoMap.get("liferay.user.id");
-    	String screenName = "dumdidum";
     	try {
-			screenName = UserServiceUtil.getUserById(Long.parseLong(userName)).getScreenName();
+			this.liferayScreenName = UserServiceUtil.getUserById(Long.parseLong(userName)).getScreenName();
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -305,43 +288,42 @@ public class VisualizerUI extends UI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+				
+	}
+	
+	private void setTable(){
+		VisualConfigurationManager manager = VisualConfigurationManager.getInstance();
 		table = new Table();
-		table.addContainerProperty("CODE", String.class, "");
-		table.addContainerProperty("Data Set Type", String.class, "");
-		table.addContainerProperty("Experiment", String.class, "");
-		table.addContainerProperty("Registration date", String.class, "");
-		table.addContainerProperty("Size", String.class,"");
 		table.addContainerProperty("Name",String.class,"");
+		table.addContainerProperty("Experiment", String.class, "");	
+		table.addContainerProperty("Size", String.class,"");
+		table.addContainerProperty("Registration date", String.class, "");
+		table.addContainerProperty("Data Set Type", String.class, "");
+		table.addContainerProperty("CODE", String.class, "");
+		
 		//Allow selection
 		table.setSelectable(true);
 		// Trigger selection change events immediately
 		//Unfortunately in version 7.1.7 one still has to set this true, otherwise selection can be pretty buggy
 		table.setImmediate(true);
 		System.out.println("starting");
-		OpenBisClient openbisClient = new OpenBisClient("wojnar", "opk49x3z", "https://qbis.informatik.uni-tuebingen.de:8443/openbis", false);
+		OpenBisClient openbisClient = new OpenBisClient(manager.getDataSourceUser(),manager.getDataSourcePassword(), manager.getDataSourceURL(), false);
 		IOpenbisServiceFacade facade = openbisClient.getFacade();
 		//IOpenbisServiceFacade facade = OpenbisServiceFacadeFactory.tryCreate(manager.getDataSourceUser(), manager.getDataSourcePassword(), "https://qbis.informatik.uni-tuebingen.de:8443/openbis", 60000);
 		IProteomicsDataApiFacade facade2 = FacadeFactory.create(manager.getDataSourceURL(), manager.getDataSourceUser(),  manager.getDataSourcePassword() );
-		List<Project> projects = facade2.listProjects(screenName);
+		List<Project> projects = facade2.listProjects(this.liferayScreenName);
 		facade2.logout();
 		int i = 0;
-		int j = 0;
-		int k = 0;
+
 		for(Project project: projects){
 			List<String> temp = new ArrayList<String>();
 			temp.add(project.getIdentifier());
 			List<Experiment> experiments = facade.listExperimentsForProjects(temp);
-
-			k++;
 			for(Experiment experiment: experiments){
-				//List<DataSet> datasets = facade.listDataSetsForExperiment(experiment.getIdentifier());
 				ArrayList<String> eee = new ArrayList<String>();
 				eee.add(experiment.getIdentifier());
-				//System.out.println(facade.listSamplesForExperiments(eee).size());
-				//System.out.println(facade.listDataSetsForExperiments(eee).size());
+
 				List<DataSet> datasets = facade.listDataSetsForExperiments(eee);
-				j++;
 				for (DataSet ds : datasets){
 					String code  = ds.getCode();
 					String exp_id = ds.getExperimentIdentifier();
@@ -353,7 +335,7 @@ public class VisualizerUI extends UI {
 					String datasetName = filelist[0].getPathInListing();
 					if(ds_type.toLowerCase().equals("zip")){
 						table.addItem(new Object[] {
-							    code,ds_type,exp_id, date.toString(),dataSetSize, datasetName},new Integer(i));	
+								datasetName,exp_id,dataSetSize, date.toString(),ds_type, code },new Integer(i));	
 					}
 
 					++i;
