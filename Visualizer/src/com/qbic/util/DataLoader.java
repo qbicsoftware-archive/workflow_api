@@ -1,6 +1,5 @@
 package com.qbic.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //import org.icefaces.application.PortableRenderer;

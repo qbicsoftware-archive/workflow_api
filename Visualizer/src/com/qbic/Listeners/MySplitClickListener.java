@@ -1,11 +1,11 @@
 package com.qbic.Listeners;
 
+import com.example.visualizer.VisualizerUI;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
 import com.vaadin.ui.AbstractSplitPanel.SplitterClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.UI;
-import com.example.visualizer.VisualizerUI;
 
 public class MySplitClickListener implements SplitterClickListener{
 
@@ -21,7 +21,7 @@ public class MySplitClickListener implements SplitterClickListener{
 			VisualizerUI ui  = ((VisualizerUI)UI.getCurrent());
 			float newFrameW = Math.max(hsplit.getWidth()*percent - 1,1);
 			System.out.println("MySplitClickListener: current,max,percent" + current + "," + max + "," + percent);
-			ui.setBrowserWidth(newFrameW);
+			//ui.setBrowserWidth(newFrameW);
 		}
 	}
 

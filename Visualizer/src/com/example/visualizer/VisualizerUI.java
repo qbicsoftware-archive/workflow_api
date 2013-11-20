@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,8 +17,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.portlet.PortletRequest;
 import javax.servlet.annotation.WebServlet;
-
-import org.vaadin.artur.icepush.ICEPush;
 
 import ch.systemsx.cisd.openbis.dss.client.api.v1.DataSet;
 import ch.systemsx.cisd.openbis.dss.client.api.v1.IOpenbisServiceFacade;
@@ -32,49 +29,29 @@ import ch.systemsx.cisd.openbis.plugin.proteomics.client.api.v1.IProteomicsDataA
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.UserServiceUtil;
-
+import com.qbic.Listeners.MyBrowserWindowResizeListener;
+import com.qbic.Listeners.MySplitClickListener;
 import com.qbic.openbismodel.OpenBisClient;
 import com.qbic.util.CommandLine;
 import com.qbic.util.ConfigurationManager;
 import com.qbic.util.DashboardUtil;
-import com.qbic.util.VisualConfigurationManager;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.FilesystemContainer;
-import com.vaadin.data.util.TextFileProperty;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.Page.BrowserWindowResizeEvent;
-import com.vaadin.server.Page.BrowserWindowResizeListener;
 import com.vaadin.server.Sizeable;
-import com.vaadin.server.StreamResource;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.VaadinPortletService;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.MouseEventDetails;
+import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.ui.BrowserFrame;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TabSheet.CloseHandler;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-
-import com.qbic.Listeners.MyBrowserWindowResizeListener;
-import com.qbic.Listeners.MySplitClickListener;
 
 @SuppressWarnings("serial")
 @Theme("liferay")
@@ -86,63 +63,20 @@ public class VisualizerUI extends UI {
 	}
 	
 	private Panel layout;
-	HorizontalSplitPanel hsplit;
+	MyHorizontalSplitPanel hsplit;
 	private Table table;
 	private List<File> folderToDelete;
 	public HashMap<String, BrowserFrame> frames;
 	private int h;
 	private int w;
-	/**
-	 * returns a vaadin conform string for sizing components in pixel.
-	 * @param pixel - number of pixels. Can be either height or width.
-	 * @return vaadin conform string
-	 */
-	private String intPixelToStringPixel(int pixel){
-		return String.valueOf(pixel) + "px";
-	}
-	/**
-	 * setSize in pixel. Width will be reduced to 95 % of the original w.
-	 * h and w are supposed to be the height and width of the browser, respectively. 
-	 * Hence, width is reduced. Because the portlet should fit into the browser. Height is done automatically.
-	 * @param h
-	 * @param w
-	 */
-	public void setSize(int h, int w){
-		float newPanelW = (float) (0.95*(float)w);
-		float newPanelH = (float) (0.95*(float)h);
-		layout.setWidth(this.intPixelToStringPixel((int)newPanelW));
-		layout.setHeight(this.intPixelToStringPixel((int)newPanelH));
-		float newHsplitW = newPanelW;//(float) (0.95*(float)newPanelW);
-		float newHsplitH = (float) (0.95*(float)newPanelH);
-		this.hsplit.setWidth(this.intPixelToStringPixel((int)newHsplitW));
-		this.hsplit.setHeight(this.intPixelToStringPixel((int)newHsplitH));
-		
-		
-		float newFrameH = (float) (0.95*(float)newHsplitH);
-		float current = hsplit.getSplitPosition() - hsplit.getMinSplitPosition();
-		float max = hsplit.getMaxSplitPosition() - hsplit.getMinSplitPosition();
-		float percent = current/this.hsplit.getWidth();
-		System.out.println("setSize: current,width,percent" + current + "," + this.hsplit.getWidth() + "," + percent);
-		percent = 1f - percent;
-		float newFrameW = Math.max(newHsplitW*percent,1);
-		this.h = (int) newFrameH;
-		this.w = (int) newFrameW;
-		System.out.println("setSize: current,max,percent" + current + "," + max + "," + percent);
-		System.out.println("splith,splitw: "+ newHsplitH + ","+ newHsplitW);
-		System.out.println("h,w: "+ this.h + ","+ this.w);
-		for(BrowserFrame frame: this.frames.values()){
-			frame.setWidth(this.intPixelToStringPixel((int)newFrameW));
-			frame.setHeight(this.intPixelToStringPixel((int)newFrameH));
-		}
-	}
+
 	
 	@Override
 	protected void init(VaadinRequest request) {
+		//initialize main layout
 		this.buildMainLayout();
 		this.folderToDelete = new ArrayList<File>();
-		System.out.println("version 5");
-		
-		//TODO change with setTable for production
+		//initialize table
 		this.setTable(request);
 		final TabSheet tabsheet = new TabSheet();
 		System.out.println("hsplit width: " + this.hsplit.getWidth() +", hsplit height " + this.hsplit.getHeight() +" split position" + this.hsplit.getSplitPosition());
@@ -151,25 +85,22 @@ public class VisualizerUI extends UI {
 			public void valueChange(ValueChangeEvent event) {
 			    	String datasetCode = (String)table.getItem(event.getProperty().getValue()).getItemProperty("CODE").getValue();
 			    	VisualizerUI ui =(VisualizerUI) UI.getCurrent();
-					if(!ui.frames.containsKey(datasetCode)){
+					
+			    	if(!ui.frames.containsKey(datasetCode)){
 				    	String fastqc = ui.getFastQC(datasetCode);
 						ThemeResource themeResource = new ThemeResource(fastqc);
-						BrowserFrame browser = new BrowserFrame("" , themeResource);//baseDirFile ); //new ExternalResource(url) /*For some reason the file is not shown :/*
+						BrowserFrame browser = new BrowserFrame("" , themeResource);
 						System.out.println("UI.getCurrent().getContent() width: " + UI.getCurrent().getContent().getWidth() +", UI.getCurrent() height " + UI.getCurrent().getContent().getHeight());
 						System.out.println("Before change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
 						browser.setWidth(((VisualizerUI)UI.getCurrent()).getW(),Sizeable.UNITS_PIXELS);
 						browser.setHeight(((VisualizerUI)UI.getCurrent()).getH()-1,Sizeable.UNITS_PIXELS);
 						System.out.println("After change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
 						ui.frames.put(datasetCode, browser);
-						//tab.addComponent(browser);
-						//tab.setWidth("100%");
-						//tab.setHeight("100%");
+
 						tabsheet.addComponent(browser);			
 						tabsheet.getTab(browser).setClosable(true);
 						tabsheet.getTab(browser).setCaption("Fastq Quality Control");
 						tabsheet.setSelectedTab(browser);
-						//tabsheet.getTab(tab).setClosable(true);
-						//tabsheet.setSelectedTab(tab);
 					}
 					else{
 						BrowserFrame frame = ui.frames.get(datasetCode);
@@ -181,12 +112,12 @@ public class VisualizerUI extends UI {
 						}
 						tabsheet.setSelectedTab(frame);
 					}
-
     	    }
 		});
 		hsplit.setFirstComponent(this.table);
 		hsplit.setSecondComponent(tabsheet);
-		hsplit.addSplitterClickListener(new MySplitClickListener());
+		//hsplit.addSplitterClickListener(new MySplitClickListener());
+		hsplit.addSplitPositionChangeListener(new SplitPositionChangeListener());
 		float wTmp = (float) this.layout.getWidth();
 		wTmp *= 0.25;
 		hsplit.setSplitPosition(wTmp, this.layout.getWidthUnits());
@@ -194,26 +125,47 @@ public class VisualizerUI extends UI {
 	
 	private void buildMainLayout(){
 		this.layout = new Panel("Quality Control Panel");
-		hsplit = new HorizontalSplitPanel();
+		//hsplit = new HorizontalSplitPanel();
+		this.hsplit =new MyHorizontalSplitPanel();/* new HorizontalSplitPanel() {
+			{ registerRpc(new AbstractSplitPanelRpc() { 
+				@Override 
+				public void setSplitterPosition(float position) { 
+					// Do your magic here 
+
+					} 
+				@Override 
+				public void splitterClick(MouseEventDetails mouseDetails) { 
+						// TODO Auto-generated method stub 
+						} 
+					}); 
+			}
+		}; */
+			
+		
 		this.frames = new HashMap<String,BrowserFrame>();
 		this.setSize(this.getPage().getBrowserWindowHeight(),this.getPage().getBrowserWindowWidth());
-
 		layout.setContent(hsplit);
 		this.setContent(layout);
-		//Use full size of the browser 
+		//Adjust portlet to the size of the browser 
 		this.getPage().addBrowserWindowResizeListener(new MyBrowserWindowResizeListener());
 	}
 	
-	private boolean deleteFolder(File folder){
+	
+	/**
+	 * Deletes the File. If File is a folder it is deleted recursively.
+	 * @param file - File or Folder. 
+	 * @return true if the parameter file could be deleted.
+	 */
+	private boolean deleteFile(File file){
 		
-		if(folder.isDirectory()){
-			File [] subFiles = folder.listFiles();
+		if(file.isDirectory()){
+			File [] subFiles = file.listFiles();
 			for(int i = 0; i < subFiles.length;++i){
-				deleteFolder(subFiles[i]);
+				deleteFile(subFiles[i]);
 			}
 		}
-		System.out.println("Deleting: " + folder.getAbsolutePath());
-		return folder.delete();
+		System.out.println("Deleting: " + file.getAbsolutePath());
+		return file.delete();
 		
 	}
 	
@@ -483,37 +435,12 @@ public class VisualizerUI extends UI {
 		facade.logout();
 	}
 	
-	
-	/*
-	@Override
-	protected void init(VaadinRequest request) {
-		final ICEPush pusher = new ICEPush();
-		final Label label  =new Label();
-		label.setValue("browser width: " + this.getPage().getBrowserWindowWidth() + " browser height: " + this.getPage().getBrowserWindowHeight());
-		this.getPage().addBrowserWindowResizeListener(new BrowserWindowResizeListener(){
-
-			@Override
-			public void browserWindowResized(BrowserWindowResizeEvent event) {
-				// TODO Auto-generated method stub
-				System.out.println("browser width: " + event.getWidth() + " browser height: " + event.getHeight());
-				label.setValue("browser width: " + event.getWidth() + " browser height: " + event.getHeight());
-			}
-			
-		});
-		
-		this.setContent(label);
-	}	
-	*/
-	
-	//TODO delete all unused files at the end. IN close or detach???
-	/*public void close(){
-		
-		super.close();
-	}*/
-	
 	public void detach(){
 		for(File file: this.folderToDelete){
-			this.deleteFolder(file);
+			boolean fileDeleted = this.deleteFile(file);
+			if(!fileDeleted){
+				System.err.println(file.getAbsolutePath() + " could not be deleted");
+			}
 		}
 		super.detach();
 	}
@@ -533,87 +460,62 @@ public class VisualizerUI extends UI {
 	public void setW(int w) {
 		this.w = w;
 	}
-	public void setBrowserWidth(float newFrameW) {
-		this.w = (int) newFrameW;
+	public void setBrowserWidth(float newBrowserFrameW, float newTableW) {
+		this.w = (int) newBrowserFrameW;
 		for(BrowserFrame frame: this.frames.values()){
-			frame.setWidth(this.intPixelToStringPixel((int)newFrameW));
+			frame.setWidth(this.intPixelToStringPixel((int)newBrowserFrameW));
 		}
+		this.table.setWidth(this.intPixelToStringPixel((int)newTableW));
+	
 		
 		System.out.println("splith,splitw: "+ hsplit.getHeight() + ","+ hsplit.getWidth());
 		System.out.println("h,w: "+ h + ","+ w);
 	}
-
-
-
 	
-	/*	
-	FilesystemContainer docs = new FilesystemContainer(new File("/home/guseuser/dummyDropbox/ALL_GS1000692_fastqc"));
-	Table docList = new Table("Documents", docs);
-	Label docView = new Label("", ContentMode.HTML);
-	BrowserFrame browser;
-
-	@Override
-	protected void init(VaadinRequest request) {
-		//HorizontalSplitPanel split = new HorizontalSplitPanel();
-		//setContent(split);
-		//split.addComponent(docList);
-		//split.addComponent(docView);
-		final VerticalLayout layout = new VerticalLayout();
-		layout.setMargin(true);
-		setContent(layout);
+	
+	/**
+	 * returns a vaadin conform string for sizing components in pixel.
+	 * @param pixel - number of pixels. Can be either height or width.
+	 * @return vaadin conform string
+	 */
+	private String intPixelToStringPixel(int pixel){
+		return String.valueOf(pixel) + "px";
+	}
+	/**
+	 * setSize in pixel. Width will be reduced to 95 % of the original w.
+	 * h and w are supposed to be the height and width of the browser, respectively. 
+	 * Hence, width is reduced. Because the portlet should fit into the browser. Height is done automatically.
+	 * @param h
+	 * @param w
+	 */
+	public void setSize(int h, int w){
+		float newPanelW = (float) (0.95*(float)w);
+		float newPanelH = (float) (0.95*(float)h);
+		layout.setWidth(this.intPixelToStringPixel((int)newPanelW));
+		layout.setHeight(this.intPixelToStringPixel((int)newPanelH));
+		float newHsplitW = newPanelW;//(float) (0.95*(float)newPanelW);
+		float newHsplitH = (float) (0.95*(float)newPanelH);
+		this.hsplit.setWidth(this.intPixelToStringPixel((int)newHsplitW));
+		this.hsplit.setHeight(this.intPixelToStringPixel((int)newHsplitH));
 		
-		// Have a panel to put stuff in
-		File base = request.getService().getBaseDirectory();
-		Label basePath = new Label(base.getAbsolutePath());
-		Panel panel = new Panel(base.getAbsolutePath());
-		panel.setHeight("1200px");
-		panel.setWidth("100%");
-		// Have a horizontal split panel as its content
-		HorizontalSplitPanel hsplit = new HorizontalSplitPanel();
-		panel.setContent(hsplit);
-		//Label firstComponent = new Label("ls -la tralalala");
-		Process p = CommandLine.executeCmd("ls -la");
 		
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					p.getInputStream()));
-			
-			ArrayList<String> list = new ArrayList<String>();
-			String line = reader.readLine();
-			list.add(line);
-			while (line != null) {
-				line = reader.readLine();
-				list.add(line);
-			}
- 
-			if (list.size() > 0) {
-				for (String ip : list) {
-					System.out.println(ip);
-				}
-			} else {
-				System.out.println("No Output");
-			}
-
-		hsplit.setFirstComponent(new Label(base.getAbsolutePath()));
-		
-		//FileResource baseDirFile = new FileResource(new File(base.getAbsolutePath() + "/" + "ALL_GS1000692_fastqc/fastqc_report.html"));
-		FileResource baseDirFile = new FileResource(new File("fastqc_report.html"));
-		System.out.println(baseDirFile.getFilename());
-		System.out.println(baseDirFile.getSourceFile().getAbsolutePath());
-		System.out.println("2");
-		ThemeResource themeResource = new ThemeResource("ALL_GS1000692_fastqc/fastqc_report.html");
-		System.out.println(themeResource.toString());
-		browser = new BrowserFrame("Name is : " , themeResource);//baseDirFile ); //new ExternalResource(url) /*For some reason the file is not shown :/*
-		System.out.println("3");
-		browser.setWidth("100%");
-		System.out.println("4");
-		browser.setHeight("1200px");
-		System.out.println("5");
-		//layout.addComponent(browser);
-		hsplit.setSecondComponent(browser);
-		System.out.println("6");
-		layout.addComponent(panel);
-		System.out.println("7");
-	}*/
+		float newFrameH = (float) (0.95*(float)newHsplitH);
+		float current = hsplit.getSplitPosition() - hsplit.getMinSplitPosition();
+		float max = hsplit.getMaxSplitPosition() - hsplit.getMinSplitPosition();
+		float percent = current/this.hsplit.getWidth();
+		System.out.println("setSize: current,width,percent" + current + "," + this.hsplit.getWidth() + "," + percent);
+		percent = 1f - percent;
+		float newFrameW = Math.max(newHsplitW*percent,1);
+		this.h = (int) newFrameH;
+		this.w = (int) newFrameW;
+		System.out.println("setSize: current,max,percent" + current + "," + max + "," + percent);
+		System.out.println("splith,splitw: "+ newHsplitH + ","+ newHsplitW);
+		System.out.println("h,w: "+ this.h + ","+ this.w);
+		for(BrowserFrame frame: this.frames.values()){
+			frame.setWidth(this.intPixelToStringPixel((int)newFrameW));
+			frame.setHeight(this.intPixelToStringPixel((int)newFrameH));
+		}
+	}
 
 }
 

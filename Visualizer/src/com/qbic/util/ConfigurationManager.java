@@ -7,7 +7,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Properties;
 
-import com.liferay.util.portlet.PortletProps; //util-java.jar
+import com.liferay.util.portlet.PortletProps;
+//util-java.jar
 
 public class ConfigurationManager {
 

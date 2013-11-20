@@ -1,12 +1,7 @@
 package com.qbic.Listeners;
 
-import com.example.visualizer.VisualizerUI;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.server.Sizeable;
-import com.vaadin.server.ThemeResource;
-import com.vaadin.ui.BrowserFrame;
-import com.vaadin.ui.UI;
 
 public class MyTableValueChangeListener implements Property.ValueChangeListener {
     @Override

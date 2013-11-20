@@ -3,14 +3,13 @@ package com.qbic.util;
 import java.util.ArrayList;
 import java.util.List;
 
-//import javax.faces.context.FacesContext;
-
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
+//import javax.faces.context.FacesContext;
 
 public class UserDetails {
 	
