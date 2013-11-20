@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
 
-import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.AbstractSplitPanel.SplitterClickEvent;
 
 
 

@@ -1,12 +1,10 @@
 package com.example.visualizer;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,19 +19,23 @@ import javax.servlet.annotation.WebServlet;
 import ch.systemsx.cisd.openbis.dss.client.api.v1.DataSet;
 import ch.systemsx.cisd.openbis.dss.client.api.v1.IOpenbisServiceFacade;
 import ch.systemsx.cisd.openbis.dss.generic.shared.api.v1.FileInfoDssDTO;
+import ch.systemsx.cisd.openbis.generic.shared.api.v1.IGeneralInformationService;
 import ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.Experiment;
 import ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.Project;
+import ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.SearchCriteria;
+import ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.SearchCriteria.MatchClause;
+import ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.SearchCriteria.MatchClauseAttribute;
 import ch.systemsx.cisd.openbis.plugin.proteomics.client.api.v1.FacadeFactory;
 import ch.systemsx.cisd.openbis.plugin.proteomics.client.api.v1.IProteomicsDataApiFacade;
+
+import ch.systemsx.cisd.openbis.common.api.client.ServiceFinder;
+
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.UserServiceUtil;
 import com.qbic.Listeners.MyBrowserWindowResizeListener;
-import com.qbic.Listeners.MySplitClickListener;
 import com.qbic.openbismodel.OpenBisClient;
-import com.qbic.util.CommandLine;
-import com.qbic.util.ConfigurationManager;
 import com.qbic.util.DashboardUtil;
 import com.qbic.util.VisualConfigurationManager;
 import com.vaadin.annotations.Theme;
@@ -44,10 +46,7 @@ import com.vaadin.server.Sizeable;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.shared.MouseEventDetails;
-import com.vaadin.shared.ui.splitpanel.AbstractSplitPanelRpc;
 import com.vaadin.ui.BrowserFrame;
-import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
@@ -80,7 +79,8 @@ public class VisualizerUI extends UI {
 		this.buildMainLayout();
 		this.folderToDelete = new ArrayList<File>();
 		//initialize table
-		this.setTable();
+		this.setTable2();
+		
 		final TabSheet tabsheet = new TabSheet();
 		table.addValueChangeListener(new Property.ValueChangeListener() {
 		    @Override
@@ -120,8 +120,8 @@ public class VisualizerUI extends UI {
 		hsplit.setSecondComponent(tabsheet);
 		//hsplit.addSplitterClickListener(new MySplitClickListener());
 		hsplit.addSplitPositionChangeListener(new SplitPositionChangeListener());
-		float wTmp = (float) this.layout.getWidth();
-		wTmp *= 0.25;
+		float wTmp = this.layout.getWidth();
+		wTmp *= 0.2;
 		hsplit.setSplitPosition(wTmp, this.layout.getWidthUnits());
 	}
 	
@@ -291,6 +291,51 @@ public class VisualizerUI extends UI {
 				
 	}
 	
+	private void setTable2(){
+		VisualConfigurationManager manager = VisualConfigurationManager.getInstance();
+		table = new Table();
+		//Allow selection
+		table.setSelectable(true);
+		// Trigger selection change events immediately
+		//Unfortunately in version 7.1.7 one still has to set this true, otherwise selection can be pretty buggy
+		table.setImmediate(true);
+		table.addContainerProperty("Name",String.class,"");
+		table.addContainerProperty("Experiment", String.class, "");	
+		table.addContainerProperty("Size", String.class,"");
+		table.addContainerProperty("Registration date", String.class, "");
+		table.addContainerProperty("Data Set Type", String.class, "");
+		table.addContainerProperty("CODE", String.class, "");
+		OpenBisClient openbisClient = new OpenBisClient(manager.getDataSourceUser(),manager.getDataSourcePassword(), manager.getDataSourceURL(), false);
+		IOpenbisServiceFacade facade = openbisClient.getFacade();
+		
+		ServiceFinder serviceFinder = new ServiceFinder("openbis", IGeneralInformationService.SERVICE_URL);
+		IGeneralInformationService openbisInfoService = 
+		    serviceFinder.createService(IGeneralInformationService.class, manager.getDataSourceURL());
+		String sessionToken = openbisInfoService.tryToAuthenticateForAllServices(manager.getDataSourceUser(), manager.getDataSourcePassword());
+		SearchCriteria sc = new SearchCriteria();
+		sc.addMatchClause(MatchClause.createAttributeMatch(MatchClauseAttribute.TYPE, "ZIP"));
+		List<ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.DataSet> allDataSets = openbisInfoService.searchForDataSetsOnBehalfOfUser(sessionToken, sc, this.liferayScreenName);
+		int i = 0;
+		for (ch.systemsx.cisd.openbis.generic.shared.api.v1.dto.DataSet ds : allDataSets){
+			String code  = ds.getCode();
+			String exp_id = ds.getExperimentIdentifier();
+			Date date = ds.getRegistrationDate();
+			String ds_type = ds.getDataSetTypeCode();
+			DataSet realDS = facade.getDataSet(code);
+			FileInfoDssDTO[] filelist = realDS.listFiles("original", false);
+			String dataSetSize = DashboardUtil.humanReadableByteCount(filelist[0].getFileSize(),false);
+			String datasetName = filelist[0].getPathInListing();
+			if(ds_type.toLowerCase().equals("zip")){
+				table.addItem(new Object[] {
+						datasetName,exp_id,dataSetSize, date.toString(),ds_type, code },new Integer(i));	
+			}
+
+			++i;
+		}
+		facade.logout();
+		openbisInfoService.logout(sessionToken);
+	}
+	
 	private void setTable(){
 		VisualConfigurationManager manager = VisualConfigurationManager.getInstance();
 		table = new Table();
@@ -306,7 +351,6 @@ public class VisualizerUI extends UI {
 		// Trigger selection change events immediately
 		//Unfortunately in version 7.1.7 one still has to set this true, otherwise selection can be pretty buggy
 		table.setImmediate(true);
-		System.out.println("starting");
 		OpenBisClient openbisClient = new OpenBisClient(manager.getDataSourceUser(),manager.getDataSourcePassword(), manager.getDataSourceURL(), false);
 		IOpenbisServiceFacade facade = openbisClient.getFacade();
 		//IOpenbisServiceFacade facade = OpenbisServiceFacadeFactory.tryCreate(manager.getDataSourceUser(), manager.getDataSourcePassword(), "https://qbis.informatik.uni-tuebingen.de:8443/openbis", 60000);
@@ -345,6 +389,7 @@ public class VisualizerUI extends UI {
 		facade.logout();
 	}
 	
+	@Override
 	public void detach(){
 		for(File file: this.folderToDelete){
 			boolean fileDeleted = this.deleteFile(file);
@@ -399,17 +444,17 @@ public class VisualizerUI extends UI {
 	 * @param w
 	 */
 	public void setSize(int h, int w){
-		float newPanelW = (float) (0.95*(float)w);
-		float newPanelH = (float) (0.95*(float)h);
+		float newPanelW = (float) (0.95*w);
+		float newPanelH = (float) (0.95*h);
 		layout.setWidth(this.intPixelToStringPixel((int)newPanelW));
 		layout.setHeight(this.intPixelToStringPixel((int)newPanelH));
 		float newHsplitW = newPanelW;//(float) (0.95*(float)newPanelW);
-		float newHsplitH = (float) (0.95*(float)newPanelH);
+		float newHsplitH = (float) (0.95*newPanelH);
 		this.hsplit.setWidth(this.intPixelToStringPixel((int)newHsplitW));
 		this.hsplit.setHeight(this.intPixelToStringPixel((int)newHsplitH));
 		
 		
-		float newFrameH = (float) (0.95*(float)newHsplitH);
+		float newFrameH = (float) (0.95*newHsplitH);
 		float current = hsplit.getSplitPosition() - hsplit.getMinSplitPosition();
 		float max = hsplit.getMaxSplitPosition() - hsplit.getMinSplitPosition();
 		float percent = current/this.hsplit.getWidth();
