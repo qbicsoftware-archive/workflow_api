@@ -47,11 +47,14 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.BrowserFrame;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
 @Theme("liferay")
@@ -80,43 +83,70 @@ public class VisualizerUI extends UI {
 		this.folderToDelete = new ArrayList<File>();
 		//initialize table
 		this.setTable2();
-		
+		VerticalLayout firstComponent = new VerticalLayout();
+		final CheckBox checkbox1 = new CheckBox("Open results in new Window or Tab. Browser settings might need adjustments. E.g. allow jacascript at least temporarily.");
+		checkbox1.setImmediate(true);
+		firstComponent.addComponent(this.table);
+		firstComponent.addComponent(checkbox1);
 		final TabSheet tabsheet = new TabSheet();
 		table.addValueChangeListener(new Property.ValueChangeListener() {
 		    @Override
 			public void valueChange(ValueChangeEvent event) {
-			    	String datasetCode = (String)table.getItem(event.getProperty().getValue()).getItemProperty("CODE").getValue();
-			    	VisualizerUI ui =(VisualizerUI) UI.getCurrent();
+		    	String datasetCode = "";
+		    	String fastqc = "";
+		    	System.out.println("checkbox set : " + checkbox1.getValue());
+		    	try{
+		    		datasetCode = (String)table.getItem(event.getProperty().getValue()).getItemProperty("CODE").getValue();	
+		    	}
+		    	catch (Exception e){
+		    		//TODO: Probably no Value selected, but print stack in log to be sure.
+		    		return;
+		    	}
+		    	
+		    	VisualizerUI ui =(VisualizerUI) UI.getCurrent();
+		    	if(!ui.frames.containsKey(datasetCode)){
+			    	fastqc = ui.getFastQC(datasetCode);
+					ThemeResource themeResource = new ThemeResource(fastqc);
+					BrowserFrame browser = new BrowserFrame(fastqc , themeResource);
+					System.out.println("UI.getCurrent().getContent() width: " + UI.getCurrent().getContent().getWidth() +", UI.getCurrent() height " + UI.getCurrent().getContent().getHeight());
+					System.out.println("Before change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
+					browser.setWidth(((VisualizerUI)UI.getCurrent()).getW(),Sizeable.UNITS_PIXELS);
+					browser.setHeight(((VisualizerUI)UI.getCurrent()).getH()-1,Sizeable.UNITS_PIXELS);
+					System.out.println("After change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
+					ui.frames.put(datasetCode, browser);
 					
-			    	if(!ui.frames.containsKey(datasetCode)){
-				    	String fastqc = ui.getFastQC(datasetCode);
-						ThemeResource themeResource = new ThemeResource(fastqc);
-						BrowserFrame browser = new BrowserFrame("" , themeResource);
-						System.out.println("UI.getCurrent().getContent() width: " + UI.getCurrent().getContent().getWidth() +", UI.getCurrent() height " + UI.getCurrent().getContent().getHeight());
-						System.out.println("Before change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
-						browser.setWidth(((VisualizerUI)UI.getCurrent()).getW(),Sizeable.UNITS_PIXELS);
-						browser.setHeight(((VisualizerUI)UI.getCurrent()).getH()-1,Sizeable.UNITS_PIXELS);
-						System.out.println("After change: browser width: " + browser.getWidth() +", browser height " + browser.getHeight());
-						ui.frames.put(datasetCode, browser);
+					tabsheet.addComponent(browser);			
+					tabsheet.getTab(browser).setClosable(true);
+					tabsheet.getTab(browser).setCaption("Fastq Quality Control");
+					tabsheet.setSelectedTab(browser);
+					if(checkbox1.getValue()){
+				    	JavaScript javaScript = JavaScript.getCurrent();
+				    	String url = "/html/VAADIN/themes/liferay/" + fastqc;
+				    	System.out.println("from existing fastqc: " + url);
+				    	javaScript.execute("var win=window.open(\'"+ url + "\');win.focus();");	    	
+			    	}
+				}
+				else{
+					BrowserFrame frame = ui.frames.get(datasetCode);
+					Tab tab = tabsheet.getTab(frame);
+					if(tab == null){
+						tabsheet.addComponent(frame);			
+						tabsheet.getTab(frame).setClosable(true);
+						tabsheet.getTab(frame).setCaption("Fastq Quality Control");
+					}
+					tabsheet.setSelectedTab(frame);
+			    	if(checkbox1.getValue()){
+				    	JavaScript javaScript = JavaScript.getCurrent();
+				    	String url = "/html/VAADIN/themes/liferay/" + frame.getCaption();
+				    	System.out.println("from existing frame: " + url);
+				    	javaScript.execute("var win=window.open(\'"+ url + "\', \'_blank\');win.focus();");	    	
+			    	}
+				}
 
-						tabsheet.addComponent(browser);			
-						tabsheet.getTab(browser).setClosable(true);
-						tabsheet.getTab(browser).setCaption("Fastq Quality Control");
-						tabsheet.setSelectedTab(browser);
-					}
-					else{
-						BrowserFrame frame = ui.frames.get(datasetCode);
-						Tab tab = tabsheet.getTab(frame);
-						if(tab == null){
-							tabsheet.addComponent(frame);			
-							tabsheet.getTab(frame).setClosable(true);
-							tabsheet.getTab(frame).setCaption("Fastq Quality Control");
-						}
-						tabsheet.setSelectedTab(frame);
-					}
     	    }
 		});
-		hsplit.setFirstComponent(this.table);
+		
+		hsplit.setFirstComponent(firstComponent);
 		hsplit.setSecondComponent(tabsheet);
 		//hsplit.addSplitterClickListener(new MySplitClickListener());
 		hsplit.addSplitPositionChangeListener(new SplitPositionChangeListener());
