@@ -4,8 +4,9 @@ CELLBASE_VERSION = "v3";
 var genomeViewer = null;
 	
 com_qbic_javascript_JSGenomeViewerComponent = function() {
-	var e = this.getElement();
-	console.log(e);
+
+//	var e = this.getElement();
+//	console.log(e);
     
 	var run = function() {
 		$(document.body).append('<div id="gv-app"></div>');
@@ -22,7 +23,7 @@ com_qbic_javascript_JSGenomeViewerComponent = function() {
 	        }
 	    ]
 	};
-	var species = availableSpecies.items[0].items[0];
+	var species = availableSpecies.items[0].items[1];
 
 	genomeViewer = new GenomeViewer({
 	    targetId: 'gv-app',
@@ -103,39 +104,39 @@ com_qbic_javascript_JSGenomeViewerComponent = function() {
 	    tracks.push(this.gene);
 
 
-	    var renderer = new FeatureRenderer('gene');
-	    renderer.on({
-	        'feature:click': function (event) {
-	            console.log(event)
-	            new GeneInfoWidget(null, genomeViewer.species).draw(event);
-	        }
-	    });
-	    var gene = new FeatureTrack({
-	        targetId: null,
-	        id: 2,
-	        title: 'Gene',
-	        minHistogramRegionSize: 20000000,
-	        maxLabelRegionSize: 10000000,
-	        height: 100,
-	        titleVisibility: 'hidden',
-	        featureTypes: FEATURE_TYPES,
-
-	        renderer: renderer,
-
-	        dataAdapter: new CellBaseAdapter({
-	            category: "genomic",
-	            subCategory: "region",
-	            resource: "gene",
-	            params: {
-	                exclude: 'transcripts'
-	            },
-	            species: genomeViewer.species,
-	            cacheConfig: {
-	                chunkSize: 50000
-	            }
-	        })
-	    });
-	    genomeViewer.addOverviewTrack(gene);
+//	    var renderer = new FeatureRenderer('gene');
+//	    renderer.on({
+//	        'feature:click': function (event) {
+//	            console.log(event);
+//	            new GeneInfoWidget(null, genomeViewer.species).draw(event);
+//	        }
+//	    });
+//	    var gene = new FeatureTrack({
+//	        targetId: null,
+//	        id: 2,
+//	        title: 'Gene',
+//	        minHistogramRegionSize: 20000000,
+//	        maxLabelRegionSize: 10000000,
+//	        height: 100,
+//	        titleVisibility: 'hidden',
+//	        featureTypes: FEATURE_TYPES,
+//
+//	        renderer: renderer,
+//
+//	        dataAdapter: new CellBaseAdapter({
+//	            category: "genomic",
+//	            subCategory: "region",
+//	            resource: "gene",
+//	            params: {
+//	                exclude: 'transcripts'
+//	            },
+//	            species: genomeViewer.species,
+//	            cacheConfig: {
+//	                chunkSize: 50000
+//	            }
+//	        })
+//	    });
+//	    genomeViewer.addOverviewTrack(gene);
 
 	    this.snp = new FeatureTrack({
 	        targetId: null,
@@ -167,26 +168,24 @@ com_qbic_javascript_JSGenomeViewerComponent = function() {
 
 	    tracks.push(this.snp);
 	    genomeViewer.addTrack(tracks);
-		
+	    
 	};
 	$(document).ready(run);
 	
-//	if(genomeViewer != null && genomeViewer.rendered == true) {
-//		genomeViewer.setRegion({chromosome:"1", start: 10000000, end: 20100000});
-//	}
+
+	this.onStateChange = function() {
+		var c = this.getState().chr;
+		var s = this.getState().start;
+		var e = this.getState().end;
+		if(genomeViewer != null && genomeViewer.rendered == true) {
+			genomeViewer.setRegion({chromosome:c, start: s, end: e});
+		}
+	};
 	
+	var self = this;
 	genomeViewer.on("region:change", function() {
-		changeButtonText({aaa: "aaa"});
+		self.func();
 	});
-	
-	//changeButtonText = function(test){
-	//}
-	
-	this.onStateChange = function() {		
-	//	if(genomeViewer != null && genomeViewer.rendered == true) {
-		//	genomeViewer.setRegion({chromosome:"1", start: 10000000, end: 20100000});
-	//	}
-		
-	}
-}
+
+};
 

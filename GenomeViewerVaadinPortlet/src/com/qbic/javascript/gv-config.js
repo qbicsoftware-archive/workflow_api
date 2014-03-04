@@ -311,7 +311,7 @@ FEATURE_TYPES = {
         tooltipTitle: function (f) {
             var name = (f.name != null) ? f.name : f.id;
             if (name == null) {
-                name = ''
+                name = '';
             }
             return FEATURE_TYPES.formatTitle('Exon') + ' - <span class="ok">' + name + '</span>';
         },
@@ -355,7 +355,7 @@ FEATURE_TYPES = {
         histogramColor: "orange",
         handlers: {
             'feature:mouseover': function (e) {
-                console.log(e)
+                console.log(e);
             },
             'feature:click': function (event) {
                 new SnpInfoWidget(null, genomeViewer.species).draw(event);
@@ -387,8 +387,8 @@ FEATURE_TYPES = {
                 var fields = f.sampleData.split("\t");
             } catch (e) {
                 //Uncaught TypeError: Cannot call method 'split' of undefined
-                console.log(e)
-                debugger
+                console.log(e);
+                debugger;
             }
 
             if (fields.length > 10 || fields.length == 9)
@@ -402,15 +402,15 @@ FEATURE_TYPES = {
                 if (gt.charAt(0) == '0')
                     label = f.ref;
                 else {
-                    var pos = gt.charAt(0) - 1
-                    label = alt[pos]
+                    var pos = gt.charAt(0) - 1;
+                    label = alt[pos];
                 }
-                label += gt.charAt(1)
+                label += gt.charAt(1);
                 if (gt.charAt(2) == '0')
                     label += f.ref;
                 else {
-                    var pos = gt.charAt(2) - 1
-                    label += alt[pos]
+                    var pos = gt.charAt(2) - 1;
+                    label += alt[pos];
                 }
 
                 return label;
@@ -476,10 +476,10 @@ FEATURE_TYPES = {
         infoWidgetId: 'id',
         handlers: {
             'feature:mouseover': function (e) {
-                console.log(e)
+                console.log(e);
             },
             'feature:click': function (e) {
-                console.log(e)
+                console.log(e);
             }
         }
     },
@@ -506,10 +506,10 @@ FEATURE_TYPES = {
         infoWidgetId: 'id',
         handlers: {
             'feature:mouseover': function (e) {
-                console.log(e)
+                console.log(e);
             },
             'feature:click': function (e) {
-                console.log(e)
+                console.log(e);
             }
         }
     },
@@ -541,10 +541,10 @@ FEATURE_TYPES = {
         infoWidgetId: 'id',
         handlers: {
             'feature:mouseover': function (e) {
-                console.log(e)
+                console.log(e);
             },
             'feature:click': function (e) {
-                console.log(e)
+                console.log(e);
             }
         }
     },
@@ -589,7 +589,7 @@ FEATURE_TYPES = {
         },
         strokeColor: function (f) {
             if (this.mateUnmappedFlag(f)) {
-                return "tomato"
+                return "tomato";
             }
             return (parseInt(f.flags) & (0x10)) == 0 ? "LightGray" : "DarkGray";
         },
@@ -629,10 +629,10 @@ FEATURE_TYPES = {
         infoWidgetId: 'id',
         handlers: {
             'feature:mouseover': function (e) {
-                console.log(e)
+                console.log(e);
             },
             'feature:click': function (e) {
-                console.log(e)
+                console.log(e);
             }
         }
     }
