@@ -121,5 +121,8 @@ public interface Submitter {
 
   public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(List<String> fileTypes)
       throws Exception;
+  
+  public BeanItemContainer<Workflow> getWorkflowsByExperimentType(String experimentType)
+      throws Exception;
 
 }

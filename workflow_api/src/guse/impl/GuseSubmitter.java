@@ -189,4 +189,33 @@ public class GuseSubmitter implements Submitter {
     return suitableWorkflows;
 
   }
+  
+  @Override
+  public BeanItemContainer<Workflow> getWorkflowsByExperimentType(String experimentType)
+      throws Exception {
+    LOGGER.debug("Workflow type:");
+    LOGGER.debug(experimentType);
+
+    BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
+    File[] directoryListing = pathToWfConfig.listFiles();
+
+    if (directoryListing != null) {
+      for (File child : directoryListing) {
+        WFConfigReader wfreader = new WFConfigReader();
+        Workflow chosenWorkflow = null;
+        chosenWorkflow = wfreader.read(child.getAbsoluteFile());
+
+        String wfExperimentType = chosenWorkflow.getExperimentType();
+        LOGGER.debug("Workflow: " + chosenWorkflow.getID());
+        LOGGER.debug(wfExperimentType);
+
+        if (wfExperimentType.equals(experimentType)) {
+          suitableWorkflows.addBean(chosenWorkflow);
+        }
+      }
+    }
+
+    return suitableWorkflows;
+  }
+  
 }
