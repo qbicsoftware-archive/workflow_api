@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fasta.FastaBean;
 import fasta.FastaBean.Type;
 
 public class FastaDB {
@@ -40,6 +41,30 @@ public class FastaDB {
             "Mus_musculus",
             "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/uniprot-mouse_taxonomy_10090_keyword_181_20140226.fasta",
             Type.Proteomics);
+    FastaBean bean4 =
+            new FastaBean(
+                "Human",
+                "UCSC,  WholeGenomeFasta",
+                "hg19",
+                "Homo_sapiens",
+                "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
+                Type.NGS);
+    FastaBean bean5 =
+            new FastaBean(
+                "Human",
+                "Ensembl,  WholeGenomeFasta",
+                "GRCh37",
+                "Homo_sapiens",
+                "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
+                Type.NGS);
+    FastaBean bean6 =
+            new FastaBean(
+                "Human",
+                "UCSC,  WholeGenomeFasta",
+                "hg18",
+                "Homo_sapiens",
+                "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
+                Type.NGS);
 
     proteomicsSource.put(bean1.getName(), bean1);
     proteomicsSource.put(bean3.getName(), bean3);
