@@ -850,6 +850,10 @@ public class GuseWorkflowFileSystem {
           writeJobName(portFile, uniqueWorkflowId);
         } else if (input.getType() == Type.REGISTERNAME) {
           writeRegisterName(portFile, foreignID);
+          //phenofile is a file containing a mapping between file names and experiment variables
+          //used in microarray qc workflow
+        } else if (input.getType() == Type.PHENOFILE) {
+          writePheno(portFile, (String) input.getParams().get("pheno").getValue());
         } else if (input.getType() == Type.USER) {
           // TODO write user back
         } else if (input.getType() == Type.CTD_ZIP) {
@@ -896,6 +900,12 @@ public class GuseWorkflowFileSystem {
   void writeRegisterName(File portFile, String foreignID) throws IOException {
     FileWriter fileWriter = new FileWriter(portFile);
     fileWriter.write(foreignID);
+    fileWriter.close();
+  }
+  
+  void writePheno(File portFile, String text) throws IOException {
+    FileWriter fileWriter = new FileWriter(portFile);
+    fileWriter.write(text);
     fileWriter.close();
   }
 
