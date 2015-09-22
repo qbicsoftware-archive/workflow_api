@@ -69,6 +69,10 @@ public class FastaDB {
     proteomicsSource.put(bean1.getName(), bean1);
     proteomicsSource.put(bean3.getName(), bean3);
     ngsSource.put(bean2.getName(), bean2);
+    ngsSource.put(bean4.getName(), bean4);
+    ngsSource.put(bean5.getName(), bean5);
+    ngsSource.put(bean6.getName(), bean6);
+
   }
 
   public List<FastaBean> get(int start, int end) {
