@@ -47,6 +47,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
 
+import logging.Log4j2Logger;
+import logging.Logger;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -66,6 +69,9 @@ import com.genericworkflownodes.knime.parameter.IntegerParameter;
 import com.genericworkflownodes.knime.parameter.StringChoiceParameter;
 
 public class GuseWorkflowFileSystem {
+  
+  private static Logger LOGGER = new Log4j2Logger(GuseWorkflowFileSystem.class);
+
   private final static int DEFAULT_BUFFER_SIZE = 32768;
   private File pathToMainWorkflowFolder;
 
@@ -73,11 +79,13 @@ public class GuseWorkflowFileSystem {
 
   private Map<String, String> dropBoxPaths;
 
-  public GuseWorkflowFileSystem(File pathToMainWorkflowFolder, File certificate,
-      File dropBoxPaths) throws Exception {
+  public GuseWorkflowFileSystem(File pathToMainWorkflowFolder, File certificate, File dropBoxPaths)
+      throws Exception {
     this.pathToMainWorkflowFolder = pathToMainWorkflowFolder;
     this.certificate = certificate;
     this.dropBoxPaths = parseDropBoxPaths(dropBoxPaths);
+    LOGGER.debug(certificate.getAbsolutePath());
+    LOGGER.debug(dropBoxPaths.getAbsolutePath());
   }
 
   public File getPathToMainWorkflowFolder() {
@@ -311,23 +319,20 @@ public class GuseWorkflowFileSystem {
   }
 
   /**
-   * Get workflows that fullfill the filter criterium. This function checks the
+   * Get ALL workflows...ignore or implement what's below...
+   * (Get workflows that fullfill the filter criterium. This function checks the
    * pathToMainWorkflowFolder and filters all directories with the filter as name. e.g. filter=mzml
    * Folder structure of pathToMainWorkflowFolder workflows | --mzml | --workflow1 --workflow2 |
-   * --raw | --workflow3 --workflow4 In that case only workflow1, workflow2 will be returned.
+   * --raw | --workflow3 --workflow4 In that case only workflow1, workflow2 will be returned.)
    * 
-   * You can not use filter mzml/raw. At the moment you can only select between the two.
-   * 
-   * @param filter
    * @return
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public Set<Workflow> getWorkflows(final String filter) throws IllegalArgumentException,
+  public Set<Workflow> getWorkflows() throws IllegalArgumentException,
       IOException {
     Set<Workflow> workflows = new HashSet<Workflow>();
     File[] guseWorkflows = this.pathToMainWorkflowFolder.listFiles(new FilenameFilter() {
-
       @Override
       public boolean accept(File dir, String name) {
         // exclude hidden files and folders
@@ -335,6 +340,7 @@ public class GuseWorkflowFileSystem {
       }
     });
     assert guseWorkflows.length > 0;
+    LOGGER.debug("workflow files found: "+guseWorkflows);
     for (File file : guseWorkflows) {
       try {
         workflows.add(getWorkflow(file));
@@ -393,6 +399,7 @@ public class GuseWorkflowFileSystem {
         File parameterFile =
             Paths.get(guseWorkflow.getAbsolutePath(), workflowXmlBean.getName(), job.getName(),
                 "inputs", String.valueOf(input.getSeq().intValue()), "0").toFile();
+        LOGGER.debug("Input Name: "+input.getName());
         if (input.getName().contains("FILESTOSTAGE")) {
           Map<String, Parameter> params = null;
           try {
@@ -414,6 +421,8 @@ public class GuseWorkflowFileSystem {
         } else if (input.getName().contains("REGISTERNAME")) {
           port.setParams(parseRegisterName(parameterFile));
           port.setType(Type.REGISTERNAME);
+        } else if (input.getName().contains("PHENOFILE")) {
+          port.setType(Type.PHENOFILE);
         }
         // TODO should users get any special treatment?
         else if (input.getName().contains("USER")) {
@@ -469,8 +478,8 @@ public class GuseWorkflowFileSystem {
     }
 
     GuseWorkflowRepresentation guseWorkflowRep =
-        new GuseWorkflowRepresentation(real.getName(), "" , real.getText(),
-            "no version available", null, null, "unknown dataset type", "unknown experiment type");
+        new GuseWorkflowRepresentation(real.getName(), "", real.getText(), "no version available",
+            null, null, "unknown dataset type", "unknown experiment type");
     guseWorkflowRep.setDirectory(guseWorkflow);
     guseWorkflowRep.setWorkflowXml(workflowXmlBean);
 
@@ -819,8 +828,8 @@ public class GuseWorkflowFileSystem {
     if (workflow == null)
       throw new IllegalArgumentException("workflow is null");
     if (foreignID == null || user == null || foreignID.isEmpty() || user.isEmpty()) {
-      throw new IllegalArgumentException("can not convert " + workflow.getID()
-          + " with foreignID " + foreignID + " for user " + user);
+      throw new IllegalArgumentException("can not convert " + workflow.getID() + " with foreignID "
+          + foreignID + " for user " + user);
     }
     File workflowDir = workflow.getDirectory();
     String uniqueWorkflowId = workflow.getID();
@@ -850,8 +859,8 @@ public class GuseWorkflowFileSystem {
           writeJobName(portFile, uniqueWorkflowId);
         } else if (input.getType() == Type.REGISTERNAME) {
           writeRegisterName(portFile, foreignID);
-          //phenofile is a file containing a mapping between file names and experiment variables
-          //used in microarray qc workflow
+          // phenofile is a file containing a mapping between file names and experiment variables
+          // used in microarray qc workflow
         } else if (input.getType() == Type.PHENOFILE) {
           writePheno(portFile, (String) input.getParams().get("pheno").getValue());
         } else if (input.getType() == Type.USER) {
@@ -859,10 +868,14 @@ public class GuseWorkflowFileSystem {
         } else if (input.getType() == Type.CTD_ZIP) {
           writeZippedCtd(portFile, input);
         } else if (input.getType() == Type.DROPBOX) {
-          if(dropBoxPaths.containsKey(workflow.getSampleType())){
-            writeDropBoxPath(portFile,dropBoxPaths.get(workflow.getSampleType()));
-          }else {
-            throw new IllegalArgumentException(String.format("dropbox path not known for sample %s.\nDo you have a mapping for this sample type in dropbox.json?", workflow.getSampleType()));
+          if (dropBoxPaths.containsKey(workflow.getSampleType())) {
+            writeDropBoxPath(portFile, dropBoxPaths.get(workflow.getSampleType()));
+          } else {
+            throw new IllegalArgumentException(
+                String
+                    .format(
+                        "dropbox path not known for sample %s.\nDo you have a mapping for this sample type in dropbox.json?",
+                        workflow.getSampleType()));
           }
 
         }
@@ -902,7 +915,7 @@ public class GuseWorkflowFileSystem {
     fileWriter.write(foreignID);
     fileWriter.close();
   }
-  
+
   void writePheno(File portFile, String text) throws IOException {
     FileWriter fileWriter = new FileWriter(portFile);
     fileWriter.write(text);
@@ -996,7 +1009,7 @@ public class GuseWorkflowFileSystem {
       scp.setValue(bo);
     }
   }
-  
+
   private Map<String, String> parseDropBoxPaths(File file) throws Exception {
     InputStream inputStream = new FileInputStream(file);
     byte[] buffer = new byte[inputStream.available()];
@@ -1022,7 +1035,7 @@ public class GuseWorkflowFileSystem {
     inputStream.close();
     return dropBoxPaths;
   }
-  
+
   public File getCertificate() {
     return this.certificate;
   }
