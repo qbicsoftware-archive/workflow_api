@@ -44,7 +44,7 @@ public class FastaDB {
     FastaBean bean4 =
             new FastaBean(
                 "Human",
-                "UCSC,  WholeGenomeFasta",
+                "UCSC, hg19, WholeGenomeFasta",
                 "hg19",
                 "Homo_sapiens",
                 "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
@@ -52,7 +52,7 @@ public class FastaDB {
     FastaBean bean5 =
             new FastaBean(
                 "Human",
-                "Ensembl,  WholeGenomeFasta",
+                "Ensembl, GRCh37,  WholeGenomeFasta",
                 "GRCh37",
                 "Homo_sapiens",
                 "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
@@ -60,7 +60,7 @@ public class FastaDB {
     FastaBean bean6 =
             new FastaBean(
                 "Human",
-                "UCSC,  WholeGenomeFasta",
+                "UCSC, hg18,  WholeGenomeFasta",
                 "hg18",
                 "Homo_sapiens",
                 "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
@@ -68,10 +68,10 @@ public class FastaDB {
 
     proteomicsSource.put(bean1.getName(), bean1);
     proteomicsSource.put(bean3.getName(), bean3);
-    ngsSource.put(bean2.getName(), bean2);
-    ngsSource.put(bean4.getName(), bean4);
-    ngsSource.put(bean5.getName(), bean5);
-    ngsSource.put(bean6.getName(), bean6);
+    ngsSource.put(bean2.getDescription(), bean2);
+    ngsSource.put(bean4.getDescription(), bean4);
+    ngsSource.put(bean5.getDescription(), bean5);
+    ngsSource.put(bean6.getDescription(), bean6);
 
   }
 

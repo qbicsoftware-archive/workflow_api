@@ -47,6 +47,8 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
 
+import logging.SysOutLogger;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -926,6 +928,7 @@ public class GuseWorkflowFileSystem {
     for (Entry<String, Parameter> entry : input.getParams().entrySet()) {
       com.genericworkflownodes.knime.parameter.Parameter<?> param =
           inode.getParameter(entry.getKey());
+
       writeParameter(param, entry.getValue());
     }
     CTDConfigurationWriter writer = new CTDConfigurationWriter(portFile);
@@ -955,6 +958,7 @@ public class GuseWorkflowFileSystem {
     // integer
     if (param instanceof IntegerParameter) {
       IntegerParameter ip = (IntegerParameter) param;
+
       ip.setValue((Integer) newParam.getValue());
       // double
     } else if (param instanceof DoubleParameter) {
