@@ -110,13 +110,15 @@ public class GuseSubmitter implements Submitter {
       throw new ConnectException(
           "guse workflows not available. Check whether certificate is in the right place and guse workflow directory is set correctly.");
     }
-    String[] sortedkeys = sortKey.split("/");
-    if (sortedkeys.length > 1 && sortedkeys[1].equals("admin-origin")) {
-      return guseWorkflowFileSystem.getWorkflows(sortedkeys[0]);
-    } else {
-      throw new IllegalArgumentException("unkown sort key: " + sortKey
-          + "possible sortkeys are: admin-origin");
-    }
+    return guseWorkflowFileSystem.getWorkflows();
+    //TODO this was never implemented. is it needed at some point?
+//    String[] sortedkeys = sortKey.split("/");
+//    if (sortedkeys.length > 1 && sortedkeys[1].equals("admin-origin")) {
+//      return guseWorkflowFileSystem.getWorkflows(sortedkeys[0]);
+//    } else {
+//      throw new IllegalArgumentException("unkown sort key: " + sortKey
+//          + "possible sortkeys are: admin-origin");
+//    }
 
   }
 
@@ -129,8 +131,6 @@ public class GuseSubmitter implements Submitter {
   @Override
   public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(String fileType)
       throws Exception {
-    LOGGER.debug("File types:" + fileType);
-
     BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
     // Should that work ?
     File[] directoryListing = pathToWfConfig.listFiles();
@@ -153,9 +153,7 @@ public class GuseSubmitter implements Submitter {
   @Override
   public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(List<String> fileTypes)
       throws Exception {
-    LOGGER.debug("File types:");
     for(String type: fileTypes){
-      LOGGER.debug(type);
     }
     BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
     // Should that work ?
@@ -167,11 +165,7 @@ public class GuseSubmitter implements Submitter {
         Workflow chosenWorkflow = null;
         chosenWorkflow = wfreader.read(child.getAbsoluteFile());
         List<String> workflowFileTypes = chosenWorkflow.getFileTypes();
-        LOGGER.debug("Workflow: " + chosenWorkflow.getID());
-        for(String type: workflowFileTypes){
-          LOGGER.debug(type);
-        }
-        
+       
         
         for(String type: workflowFileTypes){
           if(fileTypes.contains(type)){
@@ -193,8 +187,6 @@ public class GuseSubmitter implements Submitter {
   @Override
   public BeanItemContainer<Workflow> getWorkflowsByExperimentType(String experimentType)
       throws Exception {
-    LOGGER.debug("Workflow type:");
-    LOGGER.debug(experimentType);
 
     BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
     File[] directoryListing = pathToWfConfig.listFiles();
@@ -206,8 +198,6 @@ public class GuseSubmitter implements Submitter {
         chosenWorkflow = wfreader.read(child.getAbsoluteFile());
 
         String wfExperimentType = chosenWorkflow.getExperimentType();
-        LOGGER.debug("Workflow: " + chosenWorkflow.getID());
-        LOGGER.debug(wfExperimentType);
 
         if (wfExperimentType.equals(experimentType)) {
           suitableWorkflows.addBean(chosenWorkflow);

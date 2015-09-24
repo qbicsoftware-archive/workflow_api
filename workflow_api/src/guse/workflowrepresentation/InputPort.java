@@ -24,7 +24,7 @@ public class InputPort {
   }
 
   public enum Type {
-    FILESTOSTAGE, JOBNAME, CTD_ZIP, CTD, REGISTERNAME, USER, DROPBOX
+    FILESTOSTAGE, JOBNAME, CTD_ZIP, CTD, REGISTERNAME, USER, DROPBOX, PHENOFILE
   };
 
   String name;
