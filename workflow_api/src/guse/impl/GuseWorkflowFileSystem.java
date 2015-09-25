@@ -69,7 +69,7 @@ import com.genericworkflownodes.knime.parameter.IntegerParameter;
 import com.genericworkflownodes.knime.parameter.StringChoiceParameter;
 
 public class GuseWorkflowFileSystem {
-  
+
   private static Logger LOGGER = new Log4j2Logger(GuseWorkflowFileSystem.class);
 
   private final static int DEFAULT_BUFFER_SIZE = 32768;
@@ -319,18 +319,17 @@ public class GuseWorkflowFileSystem {
   }
 
   /**
-   * Get ALL workflows...ignore or implement what's below...
-   * (Get workflows that fullfill the filter criterium. This function checks the
-   * pathToMainWorkflowFolder and filters all directories with the filter as name. e.g. filter=mzml
-   * Folder structure of pathToMainWorkflowFolder workflows | --mzml | --workflow1 --workflow2 |
-   * --raw | --workflow3 --workflow4 In that case only workflow1, workflow2 will be returned.)
+   * Get ALL workflows...ignore or implement what's below... (Get workflows that fullfill the filter
+   * criterium. This function checks the pathToMainWorkflowFolder and filters all directories with
+   * the filter as name. e.g. filter=mzml Folder structure of pathToMainWorkflowFolder workflows |
+   * --mzml | --workflow1 --workflow2 | --raw | --workflow3 --workflow4 In that case only workflow1,
+   * workflow2 will be returned.)
    * 
    * @return
    * @throws IllegalArgumentException
    * @throws IOException
    */
-  public Set<Workflow> getWorkflows() throws IllegalArgumentException,
-      IOException {
+  public Set<Workflow> getWorkflows() throws IllegalArgumentException, IOException {
     Set<Workflow> workflows = new HashSet<Workflow>();
     File[] guseWorkflows = this.pathToMainWorkflowFolder.listFiles(new FilenameFilter() {
       @Override
@@ -340,7 +339,7 @@ public class GuseWorkflowFileSystem {
       }
     });
     assert guseWorkflows.length > 0;
-    LOGGER.debug("workflow files found: "+guseWorkflows);
+    LOGGER.debug("workflow files found: " + guseWorkflows);
     for (File file : guseWorkflows) {
       try {
         workflows.add(getWorkflow(file));
@@ -399,7 +398,7 @@ public class GuseWorkflowFileSystem {
         File parameterFile =
             Paths.get(guseWorkflow.getAbsolutePath(), workflowXmlBean.getName(), job.getName(),
                 "inputs", String.valueOf(input.getSeq().intValue()), "0").toFile();
-        LOGGER.debug("Input Name: "+input.getName());
+        LOGGER.debug("Input Name: " + input.getName());
         if (input.getName().contains("FILESTOSTAGE")) {
           Map<String, Parameter> params = null;
           try {
@@ -422,6 +421,7 @@ public class GuseWorkflowFileSystem {
           port.setParams(parseRegisterName(parameterFile));
           port.setType(Type.REGISTERNAME);
         } else if (input.getName().contains("PHENOFILE")) {
+          LOGGER.debug("get workflow: found pheno file");
           port.setType(Type.PHENOFILE);
         }
         // TODO should users get any special treatment?
@@ -862,6 +862,7 @@ public class GuseWorkflowFileSystem {
           // phenofile is a file containing a mapping between file names and experiment variables
           // used in microarray qc workflow
         } else if (input.getType() == Type.PHENOFILE) {
+          LOGGER.debug("GuseWorkflowRepresentationToGuseConverter: found pheno file");
           writePheno(portFile, (String) input.getParams().get("pheno").getValue());
         } else if (input.getType() == Type.USER) {
           // TODO write user back
@@ -917,6 +918,7 @@ public class GuseWorkflowFileSystem {
   }
 
   void writePheno(File portFile, String text) throws IOException {
+    LOGGER.debug("writing pheno file");
     FileWriter fileWriter = new FileWriter(portFile);
     fileWriter.write(text);
     fileWriter.close();
