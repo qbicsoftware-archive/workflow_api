@@ -65,6 +65,30 @@ public class FastaDB {
                 "Homo_sapiens",
                 "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
                 Type.NGS);
+    FastaBean bean7 =
+            new FastaBean(
+                "Human",
+                "UCSC, hg19, BowtieIndex",
+                "hg19",
+                "Homo_sapiens",
+                "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Annotation/Genes/genes.gtf",
+                Type.NGS);
+    FastaBean bean8 =
+            new FastaBean(
+                "Human",
+                "Ensembl, GRCh37,  BowtieIndex",
+                "GRCh37",
+                "Homo_sapiens",
+                "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Annotation/Genes/genes.gtf",
+                Type.NGS);
+    FastaBean bean9 =
+            new FastaBean(
+                "Human",
+                "UCSC, hg18,  BowtieIndex",
+                "hg18",
+                "Homo_sapiens",
+                "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
+                Type.NGS);
 
     proteomicsSource.put(bean1.getName(), bean1);
     proteomicsSource.put(bean3.getName(), bean3);
@@ -72,7 +96,9 @@ public class FastaDB {
     ngsSource.put(bean4.getDescription(), bean4);
     ngsSource.put(bean5.getDescription(), bean5);
     ngsSource.put(bean6.getDescription(), bean6);
-
+    ngsSource.put(bean7.getDescription(), bean7);
+    ngsSource.put(bean8.getDescription(), bean8);
+    ngsSource.put(bean9.getDescription(), bean9);
   }
 
   public List<FastaBean> get(int start, int end) {
