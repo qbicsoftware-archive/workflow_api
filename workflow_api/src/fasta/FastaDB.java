@@ -89,9 +89,19 @@ public class FastaDB {
                 "Homo_sapiens",
                 "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
                 Type.NGS);
+    FastaBean bean10 =
+        new FastaBean(
+            "Human",
+            "Uniprot Human Proteome",
+            "UP000005640",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606.fasta",
+            Type.Proteomics);
 
-    proteomicsSource.put(bean1.getName(), bean1);
-    proteomicsSource.put(bean3.getName(), bean3);
+    proteomicsSource.put(bean1.getDescription(), bean1);
+    proteomicsSource.put(bean3.getDescription(), bean3);
+    proteomicsSource.put(bean10.getDescription(), bean10);
+
     ngsSource.put(bean2.getDescription(), bean2);
     ngsSource.put(bean4.getDescription(), bean4);
     ngsSource.put(bean5.getDescription(), bean5);
