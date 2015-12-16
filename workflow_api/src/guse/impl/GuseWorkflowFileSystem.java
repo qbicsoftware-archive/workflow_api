@@ -337,7 +337,6 @@ public class GuseWorkflowFileSystem {
       }
     });
     assert guseWorkflows.length > 0;
-    LOGGER.debug("workflow files found: " + guseWorkflows);
     for (File file : guseWorkflows) {
       try {
         workflows.add(getWorkflow(file));
@@ -945,7 +944,6 @@ public class GuseWorkflowFileSystem {
     for (Entry<String, Parameter> entry : input.getParams().entrySet()) {
       com.genericworkflownodes.knime.parameter.Parameter<?> param =
           inode.getParameter(entry.getKey());
-
       writeParameter(param, entry.getValue());
     }
     CTDConfigurationWriter writer = new CTDConfigurationWriter(portFile);
