@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fasta.FastaBean;
 import fasta.FastaBean.Type;
 
 public class FastaDB {
@@ -42,65 +41,70 @@ public class FastaDB {
             "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/uniprot-mouse_taxonomy_10090_keyword_181_20140226.fasta",
             Type.Proteomics);
     FastaBean bean4 =
-            new FastaBean(
-                "Human",
-                "UCSC, hg19, WholeGenomeFasta",
-                "hg19",
-                "Homo_sapiens",
-                "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
-                Type.NGS);
-    FastaBean bean5 =
-            new FastaBean(
-                "Human",
-                "Ensembl, GRCh37,  WholeGenomeFasta",
-                "GRCh37",
-                "Homo_sapiens",
-                "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
-                Type.NGS);
-    FastaBean bean6 =
-            new FastaBean(
-                "Human",
-                "UCSC, hg18,  WholeGenomeFasta",
-                "hg18",
-                "Homo_sapiens",
-                "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
-                Type.NGS);
-    FastaBean bean7 =
-            new FastaBean(
-                "Human",
-                "UCSC, hg19, BowtieIndex",
-                "hg19",
-                "Homo_sapiens",
-                "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Annotation/Genes/genes.gtf",
-                Type.NGS);
-    FastaBean bean8 =
-            new FastaBean(
-                "Human",
-                "Ensembl, GRCh37,  BowtieIndex",
-                "GRCh37",
-                "Homo_sapiens",
-                "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Annotation/Genes/genes.gtf",
-                Type.NGS);
-    FastaBean bean9 =
-            new FastaBean(
-                "Human",
-                "UCSC, hg18,  BowtieIndex",
-                "hg18",
-                "Homo_sapiens",
-                "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
-                Type.NGS);
-    FastaBean bean10 =
         new FastaBean(
             "Human",
-            "Uniprot Human Proteome",
+            "UCSC, hg19, WholeGenomeFasta",
+            "hg19",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
+            Type.NGS);
+    FastaBean bean5 =
+        new FastaBean(
+            "Human",
+            "Ensembl, GRCh37,  WholeGenomeFasta",
+            "GRCh37",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
+            Type.NGS);
+    FastaBean bean6 =
+        new FastaBean(
+            "Human",
+            "UCSC, hg18,  WholeGenomeFasta",
+            "hg18",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
+            Type.NGS);
+    FastaBean bean7 =
+        new FastaBean(
+            "Human",
+            "UCSC, hg19, BowtieIndex",
+            "hg19",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Annotation/Genes/genes.gtf",
+            Type.NGS);
+    FastaBean bean8 =
+        new FastaBean(
+            "Human",
+            "Ensembl, GRCh37,  BowtieIndex",
+            "GRCh37",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Annotation/Genes/genes.gtf",
+            Type.NGS);
+    FastaBean bean9 =
+        new FastaBean(
+            "Human",
+            "UCSC, hg18,  BowtieIndex",
+            "hg18",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
+            Type.NGS);
+    FastaBean bean10 =
+        new FastaBean("Human", "Uniprot Human Proteome", "UP000005640", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606.fasta",
+            Type.Proteomics);
+    FastaBean bean11 =
+        new FastaBean(
+            "Human",
+            "Uniprot Human Proteome Reviewed (SP)",
             "UP000005640",
             "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606.fasta",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606_reviewed.fasta",
             Type.Proteomics);
 
     proteomicsSource.put(bean1.getDescription(), bean1);
     proteomicsSource.put(bean3.getDescription(), bean3);
     proteomicsSource.put(bean10.getDescription(), bean10);
+    proteomicsSource.put(bean11.getDescription(), bean11);
 
     ngsSource.put(bean2.getDescription(), bean2);
     ngsSource.put(bean4.getDescription(), bean4);
