@@ -11,6 +11,7 @@ public class FastaDB {
 
   private Map<String, FastaBean> proteomicsSource;
   private Map<String, FastaBean> ngsSource;
+  private Map<String, FastaBean> bwaSource;
 
   public FastaDB() {
     proteomicsSource = new HashMap<String, FastaBean>();
@@ -100,6 +101,18 @@ public class FastaDB {
             "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606_reviewed.fasta",
             Type.Proteomics);
+    FastaBean bean12 =
+        new FastaBean(
+            "Human",
+            "UCSC, hg19, BWAIndex",
+            "hg19",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.UCSC/hg19/Sequence/BWAIndex/hg19",
+            Type.NGS);
+    FastaBean bean13 =
+        new FastaBean("Mouse", "UCSC, mm10, BWAIndex", "mm10", "Mus_musculus",
+            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/BWAIndex/mm10",
+            Type.NGS);
 
     proteomicsSource.put(bean1.getDescription(), bean1);
     proteomicsSource.put(bean3.getDescription(), bean3);
@@ -113,6 +126,10 @@ public class FastaDB {
     ngsSource.put(bean7.getDescription(), bean7);
     ngsSource.put(bean8.getDescription(), bean8);
     ngsSource.put(bean9.getDescription(), bean9);
+
+    // bwa indices
+    bwaSource.put(bean12.getDescription(), bean12);
+    bwaSource.put(bean12.getDescription(), bean13);
   }
 
   public List<FastaBean> get(int start, int end) {
@@ -188,6 +205,11 @@ public class FastaDB {
   public List<FastaBean> getAll() {
     ArrayList<FastaBean> beans = new ArrayList<FastaBean>(ngsSource.values());
     beans.addAll(proteomicsSource.values());
+    return beans;
+  }
+
+  public List<FastaBean> getBWAIndices() {
+    ArrayList<FastaBean> beans = new ArrayList<FastaBean>(bwaSource.values());
     return beans;
   }
 }
