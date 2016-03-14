@@ -16,6 +16,7 @@ public class FastaDB {
   public FastaDB() {
     proteomicsSource = new HashMap<String, FastaBean>();
     ngsSource = new HashMap<String, FastaBean>();
+    bwaSource = new HashMap<String, FastaBean>();
     // TODO more generic way e.g. with gson
     FastaBean bean1 =
         new FastaBean(
