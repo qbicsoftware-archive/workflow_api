@@ -48,7 +48,7 @@ public class FastaDB {
             "UCSC, hg19, WholeGenomeFasta",
             "hg19",
             "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
     FastaBean bean5 =
         new FastaBean(
@@ -56,7 +56,7 @@ public class FastaDB {
             "Ensembl, GRCh37,  WholeGenomeFasta",
             "GRCh37",
             "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
     FastaBean bean6 =
         new FastaBean(
@@ -64,7 +64,7 @@ public class FastaDB {
             "UCSC, hg18,  WholeGenomeFasta",
             "hg18",
             "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
     FastaBean bean7 =
         new FastaBean(
