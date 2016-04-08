@@ -108,11 +108,15 @@ public class FastaDB {
             "UCSC, hg19, BWAIndex",
             "hg19",
             "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.UCSC/hg19/Sequence/BWAIndex/hg19",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.UCSC/hg19/Sequence/BWAIndex/hg19/hg19",
             Type.NGS);
     FastaBean bean13 =
-        new FastaBean("Mouse", "UCSC, mm10, BWAIndex", "mm10", "Mus_musculus",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/BWAIndex/mm10",
+        new FastaBean(
+            "Mouse",
+            "UCSC, mm10, BWAIndex",
+            "mm10",
+            "Mus_musculus",
+            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/BWAIndex/mm10/mm10",
             Type.NGS);
 
     proteomicsSource.put(bean1.getDescription(), bean1);
@@ -130,7 +134,7 @@ public class FastaDB {
 
     // bwa indices
     bwaSource.put(bean12.getDescription(), bean12);
-    bwaSource.put(bean12.getDescription(), bean13);
+    bwaSource.put(bean13.getDescription(), bean13);
   }
 
   public List<FastaBean> get(int start, int end) {
