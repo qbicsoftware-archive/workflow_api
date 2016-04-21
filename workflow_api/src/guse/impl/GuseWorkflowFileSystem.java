@@ -384,12 +384,10 @@ public class GuseWorkflowFileSystem {
       for (de.uni_tuebingen.qbic.guseWorkflowBeans.Input input : job.getInput()) {
         // ignore inputs that are explicitly handled by guse
         if (!input.getPrejob().isEmpty()) {
-          System.out.println("EMPTY?");
           continue;
         }
 
         InputPort port = new InputPort();
-        System.out.println(input.getName().toString());
         port.setName(input.getName());
         port.setDescription(input.getText());
         port.setPortNumber(input.getSeq().intValue());
@@ -423,7 +421,6 @@ public class GuseWorkflowFileSystem {
           port.setType(Type.PHENOFILE);
         } else if (input.getName().contains("GROUPS")) {
           port.setType(Type.GROUPS);
-          System.out.println("GROUP");
         }
         // TODO should users get any special treatment?
         else if (input.getName().contains("USER")) {
@@ -844,7 +841,6 @@ public class GuseWorkflowFileSystem {
     for (GuseNode node : nodes) {
       for (Entry<String, InputPort> entry : node.getInputPorts().entrySet()) {
         InputPort input = entry.getValue();
-        System.out.println(input.getType().toString());
 
         File portFile =
             Paths.get(tmpWorkflowInputDir, node.getTitle(), "inputs",
@@ -867,7 +863,6 @@ public class GuseWorkflowFileSystem {
         } else if (input.getType() == Type.PHENOFILE) {
           writePheno(portFile, (String) input.getParams().get("pheno").getValue());
         } else if (input.getType() == Type.GROUPS) {
-          System.out.println("HERE");
           writePheno(portFile, (String) input.getParams().get("groups").getValue());
         } else if (input.getType() == Type.USER) {
           // TODO write user back
