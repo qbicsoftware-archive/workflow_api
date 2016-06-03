@@ -56,7 +56,7 @@ public class FastaDB {
             "Ensembl, GRCh37,  WholeGenomeFasta",
             "GRCh37",
             "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
     FastaBean bean6 =
         new FastaBean(
