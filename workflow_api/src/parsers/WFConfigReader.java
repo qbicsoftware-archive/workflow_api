@@ -16,6 +16,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import submitter.parameters.BooleanParameter;
 import submitter.parameters.FileListParameter;
 import submitter.parameters.FileParameter;
 import submitter.parameters.FloatParameter;
@@ -42,7 +43,7 @@ public class WFConfigReader {
     JSONObject jsonObject = new JSONObject(jsonText);
     inputStream.close();
     JSONObject jsonWorkflow = jsonObject.getJSONObject("workflow");
-    
+
     String workflowName = jsonWorkflow.getString("name");
     String workflowDescription = jsonWorkflow.getString("description");
     String workflowVersion = jsonWorkflow.getString("version");
@@ -106,6 +107,8 @@ public class WFConfigReader {
           String paramType = jsonInputPortParam.getString("type");
           JSONArray paramRange = jsonInputPortParam.getJSONArray("range");
 
+          boolean isRequired = jsonInputPortParam.getBoolean("required");
+
           switch (ParameterTypes.valueOf(paramType.toUpperCase())) {
             case STRING:
               List<String> strRange = new ArrayList<String>();
@@ -115,7 +118,7 @@ public class WFConfigReader {
                 strRange.add(paramRange.getString(jjj));
 
               StringParameter stringParam =
-                  new StringParameter(paramName, paramDescription, false, true, strRange);
+                  new StringParameter(paramName, paramDescription, false, isRequired, strRange);
               stringParam.setValue(paramDefaultString);
               paramMap.put(paramName, stringParam);
               break;
@@ -124,11 +127,12 @@ public class WFConfigReader {
               List<String> fileRange = new ArrayList<String>();
               String paramDefaultFile = jsonInputPortParam.getString("default");
 
+
               for (int jjj = 0; jjj < paramRange.length(); jjj++)
                 fileRange.add(paramRange.getString(jjj));
 
               FileParameter fileParam =
-                  new FileParameter(paramName, paramDescription, false, true, null, fileRange);
+                  new FileParameter(paramName, paramDescription, false, isRequired, null, fileRange);
               fileParam.setValue(paramDefaultFile);
               paramMap.put(paramName, fileParam);
               break;
@@ -145,7 +149,7 @@ public class WFConfigReader {
                 fileListRange.add(paramRange.getString(jjj));
 
               FileListParameter fileListParam =
-                  new FileListParameter(paramName, paramDescription, false, true, null,
+                  new FileListParameter(paramName, paramDescription, false, isRequired, null,
                       fileListRange);
               fileListParam.setValue(fileListDefault);
               paramMap.put(paramName, fileListParam);
@@ -159,7 +163,7 @@ public class WFConfigReader {
                 intRange.add(paramRange.getInt(jjj));
 
               IntParameter integerParam =
-                  new IntParameter(paramName, paramDescription, false, true, intRange.get(0),
+                  new IntParameter(paramName, paramDescription, false, isRequired, intRange.get(0),
                       intRange.get(1));
               integerParam.setValue(Integer.parseInt(paramDefaultInt));
               paramMap.put(paramName, integerParam);
@@ -181,17 +185,22 @@ public class WFConfigReader {
                 fltRange.add((float) paramRange.getDouble(jjj));
 
               FloatParameter floatParam =
-                  new FloatParameter(paramName, paramDescription, false, true, fltRange.get(0),
-                      fltRange.get(1));
+                  new FloatParameter(paramName, paramDescription, false, isRequired,
+                      fltRange.get(0), fltRange.get(1));
               floatParam.setValue(Float.parseFloat(paramDefaultFloat));
               paramMap.put(paramName, floatParam);
               break;
 
-            case BOOLEAN:
+            case BOOL:
+              // range for bool values not need in my opinion
               List<Boolean> boolRange = new ArrayList<Boolean>();
               String paramDefaultBool = jsonInputPortParam.getString("default");
 
-              // TODO
+              BooleanParameter boolParam =
+                  new BooleanParameter(paramName, paramDescription, false, isRequired);
+
+              boolParam.setValue(Boolean.parseBoolean(paramDefaultBool));
+              paramMap.put(paramName, boolParam);
               break;
 
             default:
@@ -214,8 +223,8 @@ public class WFConfigReader {
       workflowNodes.put(nodeName, newNode);
     }
     GuseWorkflowRepresentation guseWorkflow =
-        new GuseWorkflowRepresentation(id, workflowName, workflowDescription, workflowVersion, null,
-            null, workflowExperimentType, workflowSampleType);
+        new GuseWorkflowRepresentation(id, workflowName, workflowDescription, workflowVersion,
+            null, null, workflowExperimentType, workflowSampleType);
     guseWorkflow.setNodes(workflowNodes);
     guseWorkflow.setDirectory(workflowFileDirectory);
     return guseWorkflow;

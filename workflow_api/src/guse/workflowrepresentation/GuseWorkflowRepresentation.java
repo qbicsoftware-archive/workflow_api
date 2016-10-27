@@ -133,8 +133,12 @@ public class GuseWorkflowRepresentation extends submitter.Workflow {
   }
 
   @Override
-  public List<String> getFileTypes() {
-    List<String> fileTypes = new ArrayList<String>();
+  public Map<String, Map<String, List<String>>> getFileTypes() {
+    Map<String, Map<String, List<String>>> fileTypesMap =
+        new HashMap<String, Map<String, List<String>>>();
+
+    Map<String, List<String>> fileTypesRequired = new HashMap<String, List<String>>();
+    Map<String, List<String>> fileTypesOptional = new HashMap<String, List<String>>();
 
     for (Map.Entry<String, GuseNode> nodeEntry : getNodesNew().entrySet()) {
       GuseNode guseNode = nodeEntry.getValue();
@@ -143,25 +147,52 @@ public class GuseWorkflowRepresentation extends submitter.Workflow {
         if (inputPort.type == Type.FILESTOSTAGE) {
           for (Entry<String, Parameter> entry : inputPort.getParams().entrySet()) {
             if (!entry.getValue().getTitle().endsWith(".db")) {
-              List<String> range = null;
+              List<String> rangeRequired = null;
+              List<String> rangeOptional = null;
               if (entry.getValue() instanceof FileParameter) {
                 FileParameter fileParam = (FileParameter) entry.getValue();
-                range = fileParam.getRange();
+                if (fileParam.isRequired()) {
+                  rangeRequired = fileParam.getRange();
+                } else {
+                  rangeOptional = fileParam.getRange();
+                }
               } else {
                 FileListParameter fileListParam = (FileListParameter) entry.getValue();
-                range = fileListParam.getRange();
+                if (fileListParam.isRequired()) {
+                  rangeRequired = fileListParam.getRange();
+                } else {
+                  rangeOptional = fileListParam.getRange();
+                }
               }
-              List<String> rangeUpperCase = new ArrayList<String>();
-              for (String r : range) {
-                rangeUpperCase.add(r.toUpperCase());
+              List<String> rangeUpperCaseRequired = new ArrayList<String>();
+              List<String> rangeUpperCaseOptional = new ArrayList<String>();
+
+              if (rangeRequired != null) {
+                for (String r : rangeRequired) {
+                  // all data types start with Q in our case
+                  if (r.startsWith("Q_")) {
+                    rangeUpperCaseRequired.add(r.toUpperCase());
+                  }
+                }
+                fileTypesRequired.put(entry.getKey(), rangeUpperCaseRequired);
               }
-              fileTypes.addAll(rangeUpperCase);
+              if (rangeOptional != null) {
+                for (String r : rangeOptional) {
+                  if (r.startsWith("Q_")) {
+                    rangeUpperCaseOptional.add(r.toUpperCase());
+                  }
+                }
+                fileTypesOptional.put(entry.getKey(), rangeUpperCaseOptional);
+              }
             }
           }
         }
       }
     }
-    return fileTypes;
+    fileTypesMap.put("required", fileTypesRequired);
+    fileTypesMap.put("optional", fileTypesOptional);
+
+    return fileTypesMap;
   }
 
   public GuseNode getNode(String nodeName) {

@@ -12,11 +12,16 @@ public class FastaDB {
   private Map<String, FastaBean> proteomicsSource;
   private Map<String, FastaBean> ngsSource;
   private Map<String, FastaBean> bwaSource;
+  private Map<String, FastaBean> barcodesSource;
+  private Map<String, FastaBean> shRNAlibrarySource;
 
   public FastaDB() {
     proteomicsSource = new HashMap<String, FastaBean>();
     ngsSource = new HashMap<String, FastaBean>();
     bwaSource = new HashMap<String, FastaBean>();
+    barcodesSource = new HashMap<String, FastaBean>();
+    shRNAlibrarySource = new HashMap<String, FastaBean>();
+
     // TODO more generic way e.g. with gson
     FastaBean bean1 =
         new FastaBean(
@@ -118,6 +123,16 @@ public class FastaDB {
             "Mus_musculus",
             "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/BWAIndex/mm10/mm10",
             Type.NGS);
+    FastaBean bean14 =
+        new FastaBean("Pool M7", "Library of shRNAs (pool M7)", "1.0", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/pool_M7.tsv", Type.Transcriptomics);
+    FastaBean bean15 =
+        new FastaBean("4nt barcodes (10/25/2016)", "List of barcodes for demultiplexing", "1.0",
+            "Homo_sapiens", "/lustre_cfc/qbic/reference_genomes/barcodes/4nt_barcodes.tsv",
+            Type.Transcriptomics);
+    FastaBean bean16 =
+        new FastaBean("KPP shRNA list", "Library of shRNAs (KPP shRNA)", "1.0", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/KPP_shRNA_list.tsv", Type.Transcriptomics);
 
     proteomicsSource.put(bean1.getDescription(), bean1);
     proteomicsSource.put(bean3.getDescription(), bean3);
@@ -135,6 +150,12 @@ public class FastaDB {
     // bwa indices
     bwaSource.put(bean12.getDescription(), bean12);
     bwaSource.put(bean13.getDescription(), bean13);
+
+    // transcriptomic static files and databases
+    shRNAlibrarySource.put(bean14.getDescription(), bean14);
+    shRNAlibrarySource.put(bean16.getDescription(), bean16);
+
+    barcodesSource.put(bean15.getDescription(), bean15);
   }
 
   public List<FastaBean> get(int start, int end) {
@@ -204,17 +225,30 @@ public class FastaDB {
   }
 
   public int size() {
-    return proteomicsSource.size() + ngsSource.size();
+    return proteomicsSource.size() + ngsSource.size() + bwaSource.size();
   }
 
   public List<FastaBean> getAll() {
     ArrayList<FastaBean> beans = new ArrayList<FastaBean>(ngsSource.values());
     beans.addAll(proteomicsSource.values());
+    beans.addAll(bwaSource.values());
+    beans.addAll(shRNAlibrarySource.values());
+    beans.addAll(barcodesSource.values());
     return beans;
   }
 
   public List<FastaBean> getBWAIndices() {
     ArrayList<FastaBean> beans = new ArrayList<FastaBean>(bwaSource.values());
+    return beans;
+  }
+
+  public List<FastaBean> getBarcodeBeans() {
+    ArrayList<FastaBean> beans = new ArrayList<FastaBean>(barcodesSource.values());
+    return beans;
+  }
+
+  public List<FastaBean> getshRNABeans() {
+    ArrayList<FastaBean> beans = new ArrayList<FastaBean>(shRNAlibrarySource.values());
     return beans;
   }
 }

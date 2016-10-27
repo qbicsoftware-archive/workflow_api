@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -111,14 +113,14 @@ public class GuseSubmitter implements Submitter {
           "guse workflows not available. Check whether certificate is in the right place and guse workflow directory is set correctly.");
     }
     return guseWorkflowFileSystem.getWorkflows();
-    //TODO this was never implemented. is it needed at some point?
-//    String[] sortedkeys = sortKey.split("/");
-//    if (sortedkeys.length > 1 && sortedkeys[1].equals("admin-origin")) {
-//      return guseWorkflowFileSystem.getWorkflows(sortedkeys[0]);
-//    } else {
-//      throw new IllegalArgumentException("unkown sort key: " + sortKey
-//          + "possible sortkeys are: admin-origin");
-//    }
+    // TODO this was never implemented. is it needed at some point?
+    // String[] sortedkeys = sortKey.split("/");
+    // if (sortedkeys.length > 1 && sortedkeys[1].equals("admin-origin")) {
+    // return guseWorkflowFileSystem.getWorkflows(sortedkeys[0]);
+    // } else {
+    // throw new IllegalArgumentException("unkown sort key: " + sortKey
+    // + "possible sortkeys are: admin-origin");
+    // }
 
   }
 
@@ -153,8 +155,7 @@ public class GuseSubmitter implements Submitter {
   @Override
   public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(List<String> fileTypes)
       throws Exception {
-    for(String type: fileTypes){
-    }
+
     BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
     // Should that work ?
     File[] directoryListing = pathToWfConfig.listFiles();
@@ -164,26 +165,49 @@ public class GuseSubmitter implements Submitter {
         WFConfigReader wfreader = new WFConfigReader();
         Workflow chosenWorkflow = null;
         chosenWorkflow = wfreader.read(child.getAbsoluteFile());
-        List<String> workflowFileTypes = chosenWorkflow.getFileTypes();
-       
-        
-        for(String type: workflowFileTypes){
-          if(fileTypes.contains(type)){
+        Map<String, Map<String, List<String>>> workflowFileTypes = chosenWorkflow.getFileTypes();
+
+        Map<String, List<String>> requiredFiles = workflowFileTypes.get("required");
+        Map<String, List<String>> optionalFiles = workflowFileTypes.get("optional");
+
+        if (requiredFiles.size() == 0) {
+          boolean matched = false;
+          for (Entry<String, List<String>> entry : optionalFiles.entrySet()) {
+            for (String type : entry.getValue()) {
+              if (fileTypes.contains(type)) {
+                matched = true;
+                break;
+              }
+            }
+            if (matched) {
+              suitableWorkflows.addBean(chosenWorkflow);
+              break;
+            }
+          }
+        } else {
+          boolean missmatch = true;
+          for (Entry<String, List<String>> entry : requiredFiles.entrySet()) {
+            boolean match = false;
+            for (String type : entry.getValue()) {
+              if (fileTypes.contains(type)) {
+                match = true;
+                break;
+              }
+            }
+            if (match) {
+              missmatch = false;
+              break;
+            }
+          }
+          if (!missmatch) {
             suitableWorkflows.addBean(chosenWorkflow);
-            break;
           }
         }
-//        if (fileTypes.containsAll(workflowFileTypes)) {
-//          suitableWorkflows.addBean(chosenWorkflow);
-//        }
-
       }
     }
-
     return suitableWorkflows;
-
   }
-  
+
   @Override
   public BeanItemContainer<Workflow> getWorkflowsByExperimentType(String experimentType)
       throws Exception {
@@ -207,5 +231,5 @@ public class GuseSubmitter implements Submitter {
 
     return suitableWorkflows;
   }
-  
+
 }

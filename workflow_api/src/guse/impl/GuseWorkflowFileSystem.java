@@ -54,10 +54,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import submitter.Workflow;
+import submitter.parameters.BooleanParameter;
 import submitter.parameters.FloatParameter;
 import submitter.parameters.IntParameter;
 import submitter.parameters.Parameter;
 import submitter.parameters.StringParameter;
+import sun.misc.FloatingDecimal;
 
 import com.genericworkflownodes.knime.config.INodeConfiguration;
 import com.genericworkflownodes.knime.config.reader.CTDConfigurationReader;
@@ -670,6 +672,7 @@ public class GuseWorkflowFileSystem {
     INodeConfiguration inode = getKnimeNodeConfiguration(ctd);
     for (String key : inode.getParameterKeys()) {
       com.genericworkflownodes.knime.parameter.Parameter<?> param = inode.getParameter(key);
+
       // integer
       if (param instanceof IntegerParameter) {
         IntegerParameter ip = (IntegerParameter) param;
@@ -730,7 +733,6 @@ public class GuseWorkflowFileSystem {
         StringParameter gip =
             new StringParameter(key, scp.getDescription(), scp.isAdvanced(), !scp.isOptional(),
                 new ArrayList<String>());
-
         if (scp.getValue() == null)
           gip.setValue("");
         else
@@ -739,13 +741,15 @@ public class GuseWorkflowFileSystem {
       } else if (param instanceof BoolParameter) {
         com.genericworkflownodes.knime.parameter.BoolParameter scp =
             (com.genericworkflownodes.knime.parameter.BoolParameter) param;
-        ArrayList<String> range = new ArrayList<String>();
-        range.add("true");
-        range.add("false");
-        StringParameter gip =
-            new StringParameter(key, scp.getDescription(), scp.isAdvanced(), !scp.isOptional(),
-                range);
-        gip.setValue(String.valueOf(scp.getValue()));
+        // ArrayList<String> range = new ArrayList<String>();
+        // range.add("true");
+        // range.add("false");
+        // StringParameter gip =
+        // new StringParameter(key, scp.getDescription(), scp.isAdvanced(), !scp.isOptional(),
+        // range);
+        BooleanParameter gip =
+            new BooleanParameter(key, scp.getDescription(), scp.isAdvanced(), !scp.isOptional());
+        gip.setValue(scp.getValue());
         params.put(key, gip);
       }
     }
@@ -984,8 +988,11 @@ public class GuseWorkflowFileSystem {
       // double
     } else if (param instanceof DoubleParameter) {
       DoubleParameter dp = (DoubleParameter) param;
-      Float fl = (Float) newParam.getValue();
-      dp.setValue(fl.doubleValue());
+      // Float fl = (Float) newParam.getValue();
+      Float fl = (Float.valueOf(newParam.getValue().toString())).floatValue();
+      Double doubleResult = new FloatingDecimal(fl.floatValue()).doubleValue();
+      // dp.setValue(fl.doubleValue());
+      dp.setValue(doubleResult);
       // file
     } else if (param instanceof com.genericworkflownodes.knime.parameter.FileParameter) {
       com.genericworkflownodes.knime.parameter.FileParameter fp =
@@ -1007,7 +1014,7 @@ public class GuseWorkflowFileSystem {
     } else if (param instanceof BoolParameter) {
       com.genericworkflownodes.knime.parameter.BoolParameter scp =
           (com.genericworkflownodes.knime.parameter.BoolParameter) param;
-      Boolean bo = new Boolean((String) newParam.getValue());
+      boolean bo = (boolean) newParam.getValue();
       scp.setValue(bo);
     }
   }
