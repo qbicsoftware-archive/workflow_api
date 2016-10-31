@@ -59,7 +59,6 @@ import submitter.parameters.FloatParameter;
 import submitter.parameters.IntParameter;
 import submitter.parameters.Parameter;
 import submitter.parameters.StringParameter;
-import sun.misc.FloatingDecimal;
 
 import com.genericworkflownodes.knime.config.INodeConfiguration;
 import com.genericworkflownodes.knime.config.reader.CTDConfigurationReader;
@@ -989,8 +988,12 @@ public class GuseWorkflowFileSystem {
     } else if (param instanceof DoubleParameter) {
       DoubleParameter dp = (DoubleParameter) param;
       // Float fl = (Float) newParam.getValue();
-      Float fl = (Float.valueOf(newParam.getValue().toString())).floatValue();
-      Double doubleResult = new FloatingDecimal(fl.floatValue()).doubleValue();
+
+      Double doubleResult = Double.parseDouble(new Float((float) newParam.getValue()).toString());
+
+      // Float fl = (Float.valueOf(newParam.getValue().toString())).floatValue();
+      // Double doubleResult = new FloatingDecimal(fl.floatValue()).doubleValue();
+
       // dp.setValue(fl.doubleValue());
       dp.setValue(doubleResult);
       // file
