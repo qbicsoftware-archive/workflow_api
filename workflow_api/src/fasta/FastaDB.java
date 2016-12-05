@@ -133,11 +133,21 @@ public class FastaDB {
     FastaBean bean16 =
         new FastaBean("KPP shRNA list", "Library of shRNAs (KPP shRNA)", "1.0", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/shRNAlibs/KPP_shRNA_list.tsv", Type.Transcriptomics);
+    FastaBean bean17 =
+        new FastaBean(
+            "Schizosaccharomyces Pombe Proteins ",
+            "Library of schizosaccharomyces pombe proteins, Nterm corrected, 04/06/2011",
+            "1.0",
+            "Schizosaccharomyces_pombe",
+            "/lustre_cfc/qbic/reference_genomes/Schizosaccharomyces/Proteome/sanger.pompep.mad1.Nterm.corrected_20110406.fasta",
+            Type.Proteomics);
+
 
     proteomicsSource.put(bean1.getDescription(), bean1);
     proteomicsSource.put(bean3.getDescription(), bean3);
     proteomicsSource.put(bean10.getDescription(), bean10);
     proteomicsSource.put(bean11.getDescription(), bean11);
+    proteomicsSource.put(bean17.getDescription(), bean17);
 
     ngsSource.put(bean2.getDescription(), bean2);
     ngsSource.put(bean4.getDescription(), bean4);
