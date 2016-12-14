@@ -111,14 +111,14 @@ public class GuseSubmitter implements Submitter {
           "guse workflows not available. Check whether certificate is in the right place and guse workflow directory is set correctly.");
     }
     return guseWorkflowFileSystem.getWorkflows();
-    //TODO this was never implemented. is it needed at some point?
-//    String[] sortedkeys = sortKey.split("/");
-//    if (sortedkeys.length > 1 && sortedkeys[1].equals("admin-origin")) {
-//      return guseWorkflowFileSystem.getWorkflows(sortedkeys[0]);
-//    } else {
-//      throw new IllegalArgumentException("unkown sort key: " + sortKey
-//          + "possible sortkeys are: admin-origin");
-//    }
+    // TODO this was never implemented. is it needed at some point?
+    // String[] sortedkeys = sortKey.split("/");
+    // if (sortedkeys.length > 1 && sortedkeys[1].equals("admin-origin")) {
+    // return guseWorkflowFileSystem.getWorkflows(sortedkeys[0]);
+    // } else {
+    // throw new IllegalArgumentException("unkown sort key: " + sortKey
+    // + "possible sortkeys are: admin-origin");
+    // }
 
   }
 
@@ -153,29 +153,32 @@ public class GuseSubmitter implements Submitter {
   @Override
   public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(List<String> fileTypes)
       throws Exception {
-    for(String type: fileTypes){
-    }
     BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
-    // Should that work ?
+    // Should that work ? - It does, but according to stackoverflow it's unreliable. Look into alternative - "Paths"?
     File[] directoryListing = pathToWfConfig.listFiles();
 
     if (directoryListing != null) {
       for (File child : directoryListing) {
-        WFConfigReader wfreader = new WFConfigReader();
-        Workflow chosenWorkflow = null;
-        chosenWorkflow = wfreader.read(child.getAbsoluteFile());
-        List<String> workflowFileTypes = chosenWorkflow.getFileTypes();
-       
-        
-        for(String type: workflowFileTypes){
-          if(fileTypes.contains(type)){
-            suitableWorkflows.addBean(chosenWorkflow);
-            break;
+        //ignore files that don't end in json
+        String[] split = child.getName().split(".");
+        if (split[split.length - 1].equals("json")) {
+
+          WFConfigReader wfreader = new WFConfigReader();
+          Workflow chosenWorkflow = null;
+          chosenWorkflow = wfreader.read(child.getAbsoluteFile());
+          List<String> workflowFileTypes = chosenWorkflow.getFileTypes();
+          for (String type : workflowFileTypes) {
+            if (fileTypes.contains(type)) {
+              suitableWorkflows.addBean(chosenWorkflow);
+              break;
+            }
           }
+        } else {
+          LOGGER.warn(child.getName() + "seems to not be a workflow config, ignoring");
         }
-//        if (fileTypes.containsAll(workflowFileTypes)) {
-//          suitableWorkflows.addBean(chosenWorkflow);
-//        }
+        // if (fileTypes.containsAll(workflowFileTypes)) {
+        // suitableWorkflows.addBean(chosenWorkflow);
+        // }
 
       }
     }
@@ -183,7 +186,7 @@ public class GuseSubmitter implements Submitter {
     return suitableWorkflows;
 
   }
-  
+
   @Override
   public BeanItemContainer<Workflow> getWorkflowsByExperimentType(String experimentType)
       throws Exception {
@@ -207,5 +210,5 @@ public class GuseSubmitter implements Submitter {
 
     return suitableWorkflows;
   }
-  
+
 }
