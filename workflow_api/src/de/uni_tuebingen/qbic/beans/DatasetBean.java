@@ -1,16 +1,19 @@
 package de.uni_tuebingen.qbic.beans;
 
 import java.io.Serializable;
+import java.util.Map;
 
 public class DatasetBean implements Serializable {
 
   private static final long serialVersionUID = 5009508340296905542L;
-  
+
   private String fileName;
   private String fileType;
   private String openbisCode;
   private String fullPath;
   private String sampleIdentifier;
+  private Map<String, String> properties;
+
   public DatasetBean(String fileName, String fileType, String openbisCode, String fullPath,
       String sampleIdentifier) {
     super();
@@ -59,6 +62,14 @@ public class DatasetBean implements Serializable {
 
   public void setSampleIdentifier(String sampleIdentifier) {
     this.sampleIdentifier = sampleIdentifier;
+  }
+
+  public Map<String, String> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(Map<String, String> properties) {
+    this.properties = properties;
   }
 
 }

@@ -20,7 +20,6 @@ public class FastaBean implements Serializable {
   private String path;
   private Type type;
 
-
   public FastaBean(String name, String description, String version, String species, String path,
       Type type) {
     super();

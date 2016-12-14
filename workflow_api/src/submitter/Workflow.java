@@ -117,7 +117,7 @@ public class Workflow {
     firstInput.setValue(fullPath);
   }
 
-  public List<String> getFileTypes() {
+  public Map<String, Map<String, List<String>>> getFileTypes() {
     // TODO Auto-generated method stub
     return null;
   }

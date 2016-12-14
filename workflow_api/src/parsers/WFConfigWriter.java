@@ -7,6 +7,7 @@ import guse.workflowrepresentation.InputPort;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import submitter.parameters.BooleanParameter;
 import submitter.parameters.FileListParameter;
 import submitter.parameters.FileParameter;
 import submitter.parameters.FloatParameter;
@@ -25,19 +27,10 @@ public class WFConfigWriter {
 
   public static void main(String[] args) throws Exception {
     WFConfigReader c = new WFConfigReader();
-    GuseWorkflowRepresentation gwfr =
-        c.read(new File(
-            "/Users/mohr/Documents/PhD/projects/eclipse_workspace/WorkflowMockUp/test/com/example/workflowmockup/wfconfigs/new_testworkflow.config"));
-
-    System.out.println(gwfr.getNodesNew().get("node1").getInputPorts().get("input1")
-        .getPortNumber());
-    System.out.println(gwfr.getNodesNew().get("node1").getInputPorts().get("input2")
-        .getPortNumber());
+    GuseWorkflowRepresentation gwfr = c.read(new File("/PATH/TO/new_testworkflow.config"));
 
     WFConfigWriter w = new WFConfigWriter();
-    w.write(
-        "/Users/mohr/Documents/PhD/projects/eclipse_workspace/WorkflowMockUp/test/com/example/workflowmockup/wfconfigs/new_testworkflow.json",
-        gwfr);
+    w.write("/PATH/TO/new_testworkflow.json", gwfr);
   }
 
   public void write(String pathToConfig, GuseWorkflowRepresentation guseWorkflow)
@@ -99,11 +92,13 @@ public class WFConfigWriter {
           jsonParameter.put("name", inputPortParameter.getTitle());
           jsonParameter.put("description", inputPortParameter.getDescription());
 
+
           if (inputPortParameter instanceof StringParameter) {
             StringParameter stringParameter = (StringParameter) inputPortParameter;
             jsonParameter.put("type", "String");
             jsonParameter.put("range", new JSONArray(stringParameter.getRange()));
             jsonParameter.put("default", inputPortParameter.getValue());
+            jsonParameter.put("required", stringParameter.isRequired());
 
           } else if (inputPortParameter instanceof IntParameter) {
             IntParameter integerParameter = (IntParameter) inputPortParameter;
@@ -114,6 +109,7 @@ public class WFConfigWriter {
             jsonParameterRange.put(integerParameter.getMinimum());
             jsonParameterRange.put(integerParameter.getMaximum());
             jsonParameter.put("range", jsonParameterRange);
+            jsonParameter.put("required", integerParameter.isRequired());
 
           } else if (inputPortParameter instanceof FloatParameter) {
             FloatParameter floatParameter = (FloatParameter) inputPortParameter;
@@ -124,12 +120,15 @@ public class WFConfigWriter {
             jsonParameterRange.put(floatParameter.getMinimum());
             jsonParameterRange.put(floatParameter.getMaximum());
             jsonParameter.put("range", jsonParameterRange);
+            jsonParameter.put("required", floatParameter.isRequired());
+
 
           } else if (inputPortParameter instanceof FileParameter) {
             FileParameter fileParameter = (FileParameter) inputPortParameter;
             jsonParameter.put("type", "File");
             jsonParameter.put("default", inputPortParameter.getValue());
             jsonParameter.put("range", new JSONArray(fileParameter.getRange()));
+            jsonParameter.put("required", fileParameter.isRequired());
           }
 
           else if (inputPortParameter instanceof FileListParameter) {
@@ -138,6 +137,15 @@ public class WFConfigWriter {
             jsonParameter.put("default",
                 new JSONArray((List<String>) inputPortParameter.getValue()));
             jsonParameter.put("range", new JSONArray(fileListParameter.getRange()));
+            jsonParameter.put("required", fileListParameter.isRequired());
+          }
+
+          else if (inputPortParameter instanceof BooleanParameter) {
+            BooleanParameter boolParameter = (BooleanParameter) inputPortParameter;
+            jsonParameter.put("type", "Bool");
+            jsonParameter.put("default", inputPortParameter.getValue());
+            jsonParameter.put("range", new JSONArray(new ArrayList<String>()));
+            jsonParameter.put("required", boolParameter.isRequired());
           }
 
           jsonInputPortParameters.put(jsonParameter);

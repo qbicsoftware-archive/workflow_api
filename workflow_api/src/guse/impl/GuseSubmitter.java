@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -153,38 +155,57 @@ public class GuseSubmitter implements Submitter {
   @Override
   public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(List<String> fileTypes)
       throws Exception {
+
     BeanItemContainer<Workflow> suitableWorkflows = new BeanItemContainer<Workflow>(Workflow.class);
-    // Should that work ? - It does, but according to stackoverflow it's unreliable. Look into alternative - "Paths"?
+    // Should that work ?
     File[] directoryListing = pathToWfConfig.listFiles();
 
     if (directoryListing != null) {
       for (File child : directoryListing) {
-        //ignore files that don't end in json
-        String[] split = child.getName().split(".");
-        if (split[split.length - 1].equals("json")) {
+        WFConfigReader wfreader = new WFConfigReader();
+        Workflow chosenWorkflow = null;
+        chosenWorkflow = wfreader.read(child.getAbsoluteFile());
+        Map<String, Map<String, List<String>>> workflowFileTypes = chosenWorkflow.getFileTypes();
 
-          WFConfigReader wfreader = new WFConfigReader();
-          Workflow chosenWorkflow = null;
-          chosenWorkflow = wfreader.read(child.getAbsoluteFile());
-          List<String> workflowFileTypes = chosenWorkflow.getFileTypes();
-          for (String type : workflowFileTypes) {
-            if (fileTypes.contains(type)) {
+        Map<String, List<String>> requiredFiles = workflowFileTypes.get("required");
+        Map<String, List<String>> optionalFiles = workflowFileTypes.get("optional");
+
+        if (requiredFiles.size() == 0) {
+          boolean matched = false;
+          for (Entry<String, List<String>> entry : optionalFiles.entrySet()) {
+            for (String type : entry.getValue()) {
+              if (fileTypes.contains(type)) {
+                matched = true;
+                break;
+              }
+            }
+            if (matched) {
               suitableWorkflows.addBean(chosenWorkflow);
               break;
             }
           }
         } else {
-          LOGGER.warn(child.getName() + "seems to not be a workflow config, ignoring");
+          boolean missmatch = true;
+          for (Entry<String, List<String>> entry : requiredFiles.entrySet()) {
+            boolean match = false;
+            for (String type : entry.getValue()) {
+              if (fileTypes.contains(type)) {
+                match = true;
+                break;
+              }
+            }
+            if (match) {
+              missmatch = false;
+              break;
+            }
+          }
+          if (!missmatch) {
+            suitableWorkflows.addBean(chosenWorkflow);
+          }
         }
-        // if (fileTypes.containsAll(workflowFileTypes)) {
-        // suitableWorkflows.addBean(chosenWorkflow);
-        // }
-
       }
     }
-
     return suitableWorkflows;
-
   }
 
   @Override
