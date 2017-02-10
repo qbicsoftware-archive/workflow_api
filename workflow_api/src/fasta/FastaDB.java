@@ -141,9 +141,18 @@ public class FastaDB {
             "Schizosaccharomyces_pombe",
             "/lustre_cfc/qbic/reference_genomes/Schizosaccharomyces/Proteome/sanger.pompep.mad1.Nterm.corrected_20110406.fasta",
             Type.Proteomics);
-    proteomicsSource.put("cRAP protein sequences",
-        new FastaBean("cRAP", "common Repository of Adventitious Proteins, cRAP", "30.01.15",
-            "multiple", "/lustre_cfc/qbic/reference_genomes/crap.fasta", Type.Proteomics));
+    proteomicsSource.put("cRAP protein sequences", new FastaBean("cRAP",
+        "common Repository of Adventitious Proteins, cRAP", "30.01.15", "multiple",
+        "/lustre_cfc/qbic/reference_genomes/crap.fasta", Type.Proteomics));
+    FastaBean bean18 =
+        new FastaBean(
+            "NNalpas_PCT_349bact_with_Mmus",
+            "Custom database for metaproteomics",
+            "20161216",
+            "Mus_musculus + bacteria",
+            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/NNalpas_PCT_349bact_with_Mmus_20161216.fasta",
+            Type.Proteomics);
+
 
 
     proteomicsSource.put(bean1.getDescription(), bean1);
@@ -151,6 +160,7 @@ public class FastaDB {
     proteomicsSource.put(bean10.getDescription(), bean10);
     proteomicsSource.put(bean11.getDescription(), bean11);
     proteomicsSource.put(bean17.getDescription(), bean17);
+    proteomicsSource.put(bean18.getDescription(), bean18);
 
     ngsSource.put(bean2.getDescription(), bean2);
     ngsSource.put(bean4.getDescription(), bean4);
