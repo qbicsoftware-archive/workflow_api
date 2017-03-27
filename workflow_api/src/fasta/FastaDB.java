@@ -141,12 +141,10 @@ public class FastaDB {
             "Schizosaccharomyces_pombe",
             "/lustre_cfc/qbic/reference_genomes/Schizosaccharomyces/Proteome/sanger.pompep.mad1.Nterm.corrected_20110406.fasta",
             Type.Proteomics);
-
     FastaBean bean18 =
         new FastaBean("cRAP protein sequences", "common Repository of Adventitious Proteins, cRAP",
             "30.01.15", "multiple species", "/lustre_cfc/qbic/reference_genomes/crap.fasta",
             Type.Proteomics);
-
     FastaBean bean19 =
         new FastaBean(
             "NNalpas_PCT_349bact_with_Mmus",
@@ -155,7 +153,6 @@ public class FastaDB {
             "Mus_musculus + bacteria",
             "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/NNalpas_PCT_349bact_with_Mmus_20161216.fasta",
             Type.Proteomics);
-
     FastaBean bean20 =
         new FastaBean("3nt barcodes", "List of barcodes for demultiplexing (3nt barcodes)",
             "02/10/2017", "Homo_sapiens",
@@ -165,7 +162,22 @@ public class FastaDB {
             "1.0", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/shRNAlibs/DGG_druged_library.tsv",
             Type.Transcriptomics);
-
+    FastaBean bean22 =
+        new FastaBean(
+            "Human",
+            "Ensembl, GRCh38.78,  BWAIndex",
+            "GRCh38.78",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Sequence/BWAIndex/genome",
+            Type.NGS);
+    FastaBean bean23 =
+        new FastaBean(
+            "Human",
+            "Ensembl, GRCh38.78,  WholeGenomeFasta",
+            "GRCh38.78",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Sequence/WholeGenomeFasta/genome.fa",
+            Type.NGS);
 
 
     proteomicsSource.put(bean1.getDescription(), bean1);
@@ -184,16 +196,18 @@ public class FastaDB {
     ngsSource.put(bean7.getDescription(), bean7);
     ngsSource.put(bean8.getDescription(), bean8);
     ngsSource.put(bean9.getDescription(), bean9);
+    ngsSource.put(bean23.getDescription(), bean23);
+
 
     // bwa indices
     bwaSource.put(bean12.getDescription(), bean12);
     bwaSource.put(bean13.getDescription(), bean13);
+    bwaSource.put(bean22.getDescription(), bean22);
 
     // transcriptomic static files and databases
     shRNAlibrarySource.put(bean14.getDescription(), bean14);
     shRNAlibrarySource.put(bean16.getDescription(), bean16);
     shRNAlibrarySource.put(bean21.getDescription(), bean21);
-
 
     barcodesSource.put(bean15.getDescription(), bean15);
     barcodesSource.put(bean20.getDescription(), bean20);
