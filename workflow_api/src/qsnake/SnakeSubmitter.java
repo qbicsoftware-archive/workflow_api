@@ -3,6 +3,7 @@ package qsnake;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import submitter.Submitter;
 import submitter.Workflow;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.vaadin.data.util.BeanItemContainer;
 
 public class SnakeSubmitter implements Submitter {
   HttpHost qsnakeService;
@@ -161,6 +163,27 @@ public class SnakeSubmitter implements Submitter {
   public int numAvailablePages() throws ConnectException {
     // TODO Auto-generated method stub
     return 0;
+  }
+
+  @Override
+  public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(String fileType)
+      throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public BeanItemContainer<Workflow> getAvailableSuitableWorkflows(List<String> fileTypes)
+      throws Exception {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public BeanItemContainer<Workflow> getWorkflowsByExperimentType(String experimentType)
+      throws Exception {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

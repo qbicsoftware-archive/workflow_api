@@ -22,8 +22,9 @@ public class QSnakeWorkflowFactory {
     InputList inputData = new InputList("data", "Input files", new HashMap<String, Parameter>());
     ParameterSet params =
         new ParameterSet("parameters", "parameters", new HashMap<String, Parameter>());
-    return new Workflow(data.getString("_id"), data.getString("title"),
-        data.getString("description"), data.getString("version"), inputData, params, null);
+    return new Workflow(null, null, null, null, inputData, params, null, null);
+    // new Workflow(data.getString("_id"), data.getString("title"),
+    // data.getString("description"), data.getString("version"), inputData, params, null);
   }
 
 }

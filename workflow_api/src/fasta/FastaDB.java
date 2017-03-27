@@ -127,11 +127,11 @@ public class FastaDB {
         new FastaBean("Pool M7", "Library of shRNAs (pool M7)", "1.0", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/shRNAlibs/pool_M7.tsv", Type.Transcriptomics);
     FastaBean bean15 =
-        new FastaBean("4nt barcodes (10/25/2016)", "List of barcodes for demultiplexing", "1.0",
-            "Homo_sapiens", "/lustre_cfc/qbic/reference_genomes/barcodes/4nt_barcodes.tsv",
-            Type.Transcriptomics);
+        new FastaBean("4nt barcodes", "List of barcodes for demultiplexing (4nt barcodes)",
+            "10/25/2016", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/barcodes/4nt_barcodes.tsv", Type.Transcriptomics);
     FastaBean bean16 =
-        new FastaBean("KPP shRNA list", "Library of shRNAs (KPP shRNA)", "1.0", "Homo_sapiens",
+        new FastaBean("KPP shRNA library", "Library of shRNAs (KPP shRNA)", "1.0", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/shRNAlibs/KPP_shRNA_list.tsv", Type.Transcriptomics);
     FastaBean bean17 =
         new FastaBean(
@@ -141,10 +141,13 @@ public class FastaDB {
             "Schizosaccharomyces_pombe",
             "/lustre_cfc/qbic/reference_genomes/Schizosaccharomyces/Proteome/sanger.pompep.mad1.Nterm.corrected_20110406.fasta",
             Type.Proteomics);
-    proteomicsSource.put("cRAP protein sequences", new FastaBean("cRAP",
-        "common Repository of Adventitious Proteins, cRAP", "30.01.15", "multiple",
-        "/lustre_cfc/qbic/reference_genomes/crap.fasta", Type.Proteomics));
+
     FastaBean bean18 =
+        new FastaBean("cRAP protein sequences", "common Repository of Adventitious Proteins, cRAP",
+            "30.01.15", "multiple species", "/lustre_cfc/qbic/reference_genomes/crap.fasta",
+            Type.Proteomics);
+
+    FastaBean bean19 =
         new FastaBean(
             "NNalpas_PCT_349bact_with_Mmus",
             "Custom database for metaproteomics",
@@ -152,6 +155,16 @@ public class FastaDB {
             "Mus_musculus + bacteria",
             "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/NNalpas_PCT_349bact_with_Mmus_20161216.fasta",
             Type.Proteomics);
+
+    FastaBean bean20 =
+        new FastaBean("3nt barcodes", "List of barcodes for demultiplexing (3nt barcodes)",
+            "02/10/2017", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/barcodes/3nt_barcodes.tsv", Type.Transcriptomics);
+    FastaBean bean21 =
+        new FastaBean("DGG druged library shRNA library", "Library of shRNAs (DGG druged library)",
+            "1.0", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/DGG_druged_library.tsv",
+            Type.Transcriptomics);
 
 
 
@@ -161,6 +174,8 @@ public class FastaDB {
     proteomicsSource.put(bean11.getDescription(), bean11);
     proteomicsSource.put(bean17.getDescription(), bean17);
     proteomicsSource.put(bean18.getDescription(), bean18);
+    proteomicsSource.put(bean19.getDescription(), bean19);
+
 
     ngsSource.put(bean2.getDescription(), bean2);
     ngsSource.put(bean4.getDescription(), bean4);
@@ -177,8 +192,11 @@ public class FastaDB {
     // transcriptomic static files and databases
     shRNAlibrarySource.put(bean14.getDescription(), bean14);
     shRNAlibrarySource.put(bean16.getDescription(), bean16);
+    shRNAlibrarySource.put(bean21.getDescription(), bean21);
+
 
     barcodesSource.put(bean15.getDescription(), bean15);
+    barcodesSource.put(bean20.getDescription(), bean20);
   }
 
   public List<FastaBean> get(int start, int end) {
