@@ -23,135 +23,82 @@ public class FastaDB {
     shRNAlibrarySource = new HashMap<String, FastaBean>();
 
     // TODO more generic way e.g. with gson
-    FastaBean bean1 =
-        new FastaBean(
-            "Guinea pig",
-            "Merged Guineapig_NCBI_10feb2015.fasta with Cavia_porcellus.cavPor3.pep.all.ENSEMBL.fa",
-            "0.1a",
-            "Cavia_porcellus",
-            "/lustre_cfc/qbic/reference_genomes/Cavia_porcellus/Proteome/Cavia_porcellus.NCBI_ENSEMBL_nr.fasta",
-            Type.Proteomics);
-    FastaBean bean2 =
-        new FastaBean(
-            "Mouse",
-            "UCSC_mm10,  WholeGenomeFasta",
-            "0.1",
-            "Mus_musculus",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/annotation/genes.gtf",
-            Type.NGS);
-    FastaBean bean3 =
-        new FastaBean(
-            "Mouse",
-            "uniprot mouse taxonomy 10090 keyword 181 20140226",
-            "0.1a",
-            "Mus_musculus",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/uniprot-mouse_taxonomy_10090_keyword_181_20140226.fasta",
-            Type.Proteomics);
-    FastaBean bean4 =
-        new FastaBean(
-            "Human",
-            "UCSC, hg19, WholeGenomeFasta",
-            "hg19",
-            "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
-            Type.NGS);
+    FastaBean bean1 = new FastaBean("Guinea pig",
+        "Merged Guineapig_NCBI_10feb2015.fasta with Cavia_porcellus.cavPor3.pep.all.ENSEMBL.fa",
+        "0.1a", "Cavia_porcellus",
+        "/lustre_cfc/qbic/reference_genomes/Cavia_porcellus/Proteome/Cavia_porcellus.NCBI_ENSEMBL_nr.fasta",
+        Type.Proteomics);
+    FastaBean bean2 = new FastaBean("Mouse", "UCSC_mm10,  WholeGenomeFasta", "0.1", "Mus_musculus",
+        "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/annotation/genes.gtf",
+        Type.NGS);
+    FastaBean bean3 = new FastaBean("Mouse", "uniprot mouse taxonomy 10090 keyword 181 20140226",
+        "0.1a", "Mus_musculus",
+        "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/uniprot-mouse_taxonomy_10090_keyword_181_20140226.fasta",
+        Type.Proteomics);
+    FastaBean bean4 = new FastaBean("Human", "UCSC, hg19, WholeGenomeFasta", "hg19", "Homo_sapiens",
+        "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/WholeGenomeFasta/genome.fa",
+        Type.NGS);
     FastaBean bean5 =
-        new FastaBean(
-            "Human",
-            "Ensembl, GRCh37,  WholeGenomeFasta",
-            "GRCh37",
-            "Homo_sapiens",
+        new FastaBean("Human", "Ensembl, GRCh37,  WholeGenomeFasta", "GRCh37", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.Ensembl/GRCh37/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
     FastaBean bean6 =
-        new FastaBean(
-            "Human",
-            "UCSC, hg18,  WholeGenomeFasta",
-            "hg18",
-            "Homo_sapiens",
+        new FastaBean("Human", "UCSC, hg18,  WholeGenomeFasta", "hg18", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
-    FastaBean bean7 =
-        new FastaBean(
-            "Human",
-            "UCSC, hg19, BowtieIndex",
-            "hg19",
-            "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Annotation/Genes/genes.gtf",
-            Type.NGS);
+    FastaBean bean7 = new FastaBean("Human", "UCSC, hg19, BowtieIndex", "hg19", "Homo_sapiens",
+        "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg19/Annotation/Genes/genes.gtf",
+        Type.NGS);
     FastaBean bean8 =
-        new FastaBean(
-            "Human",
-            "Ensembl, GRCh37,  BowtieIndex",
-            "GRCh37",
-            "Homo_sapiens",
+        new FastaBean("Human", "Ensembl, GRCh37,  BowtieIndex", "GRCh37", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Annotation/Genes/genes.gtf",
             Type.NGS);
-    FastaBean bean9 =
-        new FastaBean(
-            "Human",
-            "UCSC, hg18,  BowtieIndex",
-            "hg18",
-            "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
-            Type.NGS);
+    FastaBean bean9 = new FastaBean("Human", "UCSC, hg18,  BowtieIndex", "hg18", "Homo_sapiens",
+        "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
+        Type.NGS);
     FastaBean bean10 =
         new FastaBean("Human", "Uniprot Human Proteome", "UP000005640", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606.fasta",
             Type.Proteomics);
-    FastaBean bean11 =
-        new FastaBean(
-            "Human",
-            "Uniprot Human Proteome Reviewed (SP)",
-            "UP000005640",
-            "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606_reviewed.fasta",
-            Type.Proteomics);
-    FastaBean bean12 =
-        new FastaBean(
-            "Human",
-            "UCSC, hg19, BWAIndex",
-            "hg19",
-            "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.UCSC/hg19/Sequence/BWAIndex/hg19/hg19",
-            Type.NGS);
-    FastaBean bean13 =
-        new FastaBean(
-            "Mouse",
-            "UCSC, mm10, BWAIndex",
-            "mm10",
-            "Mus_musculus",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/BWAIndex/mm10/mm10",
-            Type.NGS);
+    FastaBean bean11 = new FastaBean("Human", "Uniprot Human Proteome Reviewed (SP)", "UP000005640",
+        "Homo_sapiens",
+        "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/Proteome/UP000005640_9606_reviewed.fasta",
+        Type.Proteomics);
+    FastaBean bean12 = new FastaBean("Human", "UCSC, hg19, BWAIndex", "hg19", "Homo_sapiens",
+        "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.UCSC/hg19/Sequence/BWAIndex/hg19/hg19",
+        Type.NGS);
+    FastaBean bean13 = new FastaBean("Mouse", "UCSC, mm10, BWAIndex", "mm10", "Mus_musculus",
+        "/lustre_cfc/qbic/reference_genomes/Mus_musculus/DNA/UCSC_mm10/Sequence/BWAIndex/mm10/mm10",
+        Type.NGS);
     FastaBean bean14 =
         new FastaBean("Pool M7", "Library of shRNAs (pool M7)", "1.0", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/shRNAlibs/pool_M7.tsv", Type.Transcriptomics);
-    FastaBean bean15 =
-        new FastaBean("4nt barcodes (10/25/2016)", "List of barcodes for demultiplexing", "1.0",
-            "Homo_sapiens", "/lustre_cfc/qbic/reference_genomes/barcodes/4nt_barcodes.tsv",
-            Type.Transcriptomics);
-    FastaBean bean16 =
-        new FastaBean("KPP shRNA list", "Library of shRNAs (KPP shRNA)", "1.0", "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/KPP_shRNA_list.tsv", Type.Transcriptomics);
-    FastaBean bean17 =
-        new FastaBean(
-            "Schizosaccharomyces Pombe Proteins ",
-            "Library of schizosaccharomyces pombe proteins, Nterm corrected, 04/06/2011",
-            "1.0",
-            "Schizosaccharomyces_pombe",
-            "/lustre_cfc/qbic/reference_genomes/Schizosaccharomyces/Proteome/sanger.pompep.mad1.Nterm.corrected_20110406.fasta",
-            Type.Proteomics);
-    proteomicsSource.put("cRAP protein sequences", new FastaBean("cRAP",
-        "common Repository of Adventitious Proteins, cRAP", "30.01.15", "multiple",
-        "/lustre_cfc/qbic/reference_genomes/crap.fasta", Type.Proteomics));
-    FastaBean bean18 =
-        new FastaBean(
-            "NNalpas_PCT_349bact_with_Mmus",
-            "Custom database for metaproteomics",
-            "20161216",
-            "Mus_musculus + bacteria",
-            "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/NNalpas_PCT_349bact_with_Mmus_20161216.fasta",
-            Type.Proteomics);
+    FastaBean bean15 = new FastaBean("4nt barcodes (10/25/2016)",
+        "List of barcodes for demultiplexing", "1.0", "Homo_sapiens",
+        "/lustre_cfc/qbic/reference_genomes/barcodes/4nt_barcodes.tsv", Type.Transcriptomics);
+    FastaBean bean16 = new FastaBean("KPP shRNA list", "Library of shRNAs (KPP shRNA)", "1.0",
+        "Homo_sapiens", "/lustre_cfc/qbic/reference_genomes/shRNAlibs/KPP_shRNA_list.tsv",
+        Type.Transcriptomics);
+    FastaBean bean17 = new FastaBean("Schizosaccharomyces Pombe Proteins ",
+        "Library of schizosaccharomyces pombe proteins, Nterm corrected, 04/06/2011", "1.0",
+        "Schizosaccharomyces_pombe",
+        "/lustre_cfc/qbic/reference_genomes/Schizosaccharomyces/Proteome/sanger.pompep.mad1.Nterm.corrected_20110406.fasta",
+        Type.Proteomics);
+    proteomicsSource.put("cRAP protein sequences",
+        new FastaBean("cRAP", "common Repository of Adventitious Proteins, cRAP", "30.01.15",
+            "multiple", "/lustre_cfc/qbic/reference_genomes/crap.fasta", Type.Proteomics));
+    FastaBean bean18 = new FastaBean("NNalpas_PCT_349bact_with_Mmus",
+        "Custom database for metaproteomics", "20161216", "Mus_musculus + bacteria",
+        "/lustre_cfc/qbic/reference_genomes/Mus_musculus/Proteome/NNalpas_PCT_349bact_with_Mmus_20161216.fasta",
+        Type.Proteomics);
+    FastaBean bean19 =
+        new FastaBean("Human", "Ensembl, GRCh38.78,  BWAIndex", "GRCh38.78", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Sequence/BWAIndex/genome",
+            Type.NGS);
+    FastaBean bean20 =
+        new FastaBean("Human", "Ensembl, GRCh38.78,  WholeGenomeFasta", "GRCh38.78", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Sequence/WholeGenomeFasta/genome.fa",
+            Type.NGS);
 
 
 
@@ -169,10 +116,12 @@ public class FastaDB {
     ngsSource.put(bean7.getDescription(), bean7);
     ngsSource.put(bean8.getDescription(), bean8);
     ngsSource.put(bean9.getDescription(), bean9);
+    ngsSource.put(bean20.getDescription(), bean20);
 
     // bwa indices
     bwaSource.put(bean12.getDescription(), bean12);
     bwaSource.put(bean13.getDescription(), bean13);
+    bwaSource.put(bean19.getDescription(), bean19);
 
     // transcriptomic static files and databases
     shRNAlibrarySource.put(bean14.getDescription(), bean14);
