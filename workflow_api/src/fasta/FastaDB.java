@@ -178,7 +178,34 @@ public class FastaDB {
             "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Sequence/WholeGenomeFasta/genome.fa",
             Type.NGS);
-
+    FastaBean bean24 =
+        new FastaBean("SRM shRNA library", "Library of shRNAs (SRM)", "1.0", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_SRM.tsv",
+            Type.Transcriptomics);
+    FastaBean bean25 =
+        new FastaBean("Schulze shRNA library", "Library of shRNAs (Schulze)", "1.0",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_Schulze.tsv",
+            Type.Transcriptomics);
+    FastaBean bean26 =
+        new FastaBean("Riebold shRNA library", "Library of shRNAs (Riebold)", "1.0",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_Riebold.tsv",
+            Type.Transcriptomics);
+    FastaBean bean27 =
+        new FastaBean("Meierjohann shRNA library", "Library of shRNAs (Meierjohann)", "1.0",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_Meierjohann.tsv",
+            Type.Transcriptomics);
+    FastaBean bean28 =
+        new FastaBean("DNA D+R shRNA library", "Library of shRNAs (DNA D+R)", "1.0",
+            "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_DNA_DR.tsv",
+            Type.Transcriptomics);
+    FastaBean bean29 =
+        new FastaBean("Dauch shRNA library", "Library of shRNAs (Dauch)", "1.0", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_Dauch.tsv",
+            Type.Transcriptomics);
 
     proteomicsSource.put(bean1.getDescription(), bean1);
     proteomicsSource.put(bean3.getDescription(), bean3);
@@ -187,7 +214,6 @@ public class FastaDB {
     proteomicsSource.put(bean17.getDescription(), bean17);
     proteomicsSource.put(bean18.getDescription(), bean18);
     proteomicsSource.put(bean19.getDescription(), bean19);
-
 
     ngsSource.put(bean2.getDescription(), bean2);
     ngsSource.put(bean4.getDescription(), bean4);
@@ -198,7 +224,6 @@ public class FastaDB {
     ngsSource.put(bean9.getDescription(), bean9);
     ngsSource.put(bean23.getDescription(), bean23);
 
-
     // bwa indices
     bwaSource.put(bean12.getDescription(), bean12);
     bwaSource.put(bean13.getDescription(), bean13);
@@ -208,6 +233,12 @@ public class FastaDB {
     shRNAlibrarySource.put(bean14.getDescription(), bean14);
     shRNAlibrarySource.put(bean16.getDescription(), bean16);
     shRNAlibrarySource.put(bean21.getDescription(), bean21);
+    shRNAlibrarySource.put(bean21.getDescription(), bean24);
+    shRNAlibrarySource.put(bean21.getDescription(), bean25);
+    shRNAlibrarySource.put(bean21.getDescription(), bean26);
+    shRNAlibrarySource.put(bean21.getDescription(), bean27);
+    shRNAlibrarySource.put(bean21.getDescription(), bean28);
+    shRNAlibrarySource.put(bean21.getDescription(), bean29);
 
     barcodesSource.put(bean15.getDescription(), bean15);
     barcodesSource.put(bean20.getDescription(), bean20);
