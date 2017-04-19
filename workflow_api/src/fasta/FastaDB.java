@@ -233,12 +233,12 @@ public class FastaDB {
     shRNAlibrarySource.put(bean14.getDescription(), bean14);
     shRNAlibrarySource.put(bean16.getDescription(), bean16);
     shRNAlibrarySource.put(bean21.getDescription(), bean21);
-    shRNAlibrarySource.put(bean21.getDescription(), bean24);
-    shRNAlibrarySource.put(bean21.getDescription(), bean25);
-    shRNAlibrarySource.put(bean21.getDescription(), bean26);
-    shRNAlibrarySource.put(bean21.getDescription(), bean27);
-    shRNAlibrarySource.put(bean21.getDescription(), bean28);
-    shRNAlibrarySource.put(bean21.getDescription(), bean29);
+    shRNAlibrarySource.put(bean24.getDescription(), bean24);
+    shRNAlibrarySource.put(bean25.getDescription(), bean25);
+    shRNAlibrarySource.put(bean26.getDescription(), bean26);
+    shRNAlibrarySource.put(bean27.getDescription(), bean27);
+    shRNAlibrarySource.put(bean28.getDescription(), bean28);
+    shRNAlibrarySource.put(bean29.getDescription(), bean29);
 
     barcodesSource.put(bean15.getDescription(), bean15);
     barcodesSource.put(bean20.getDescription(), bean20);
