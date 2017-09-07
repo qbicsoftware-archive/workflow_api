@@ -51,7 +51,7 @@ public class FastaDB {
         Type.NGS);
     FastaBean bean8 =
         new FastaBean("Human", "Ensembl, GRCh37,  BowtieIndex", "GRCh37", "Homo_sapiens",
-            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/Ensembl/GRCh37/Annotation/Genes/genes.gtf",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.Ensembl/GRCh37/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.Ensembl/GRCh37/Annotation/Genes/genes.gtf",
             Type.NGS);
     FastaBean bean9 = new FastaBean("Human", "UCSC, hg18,  BowtieIndex", "hg18", "Homo_sapiens",
         "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/UCSC/hg18/Annotation/Genes/genes.gtf",
@@ -129,6 +129,14 @@ public class FastaDB {
         new FastaBean("Bajwa shRNA library", "Library of shRNAs (Bajwa)", "1.0", "Homo_sapiens",
             "/lustre_cfc/qbic/reference_genomes/shRNAlibs/shRNA_Library_QGQCL_Bajwa.tsv",
             Type.Transcriptomics);
+    FastaBean bean31 =
+        new FastaBean("Human", "Ensembl, GRCh37,  BWAIndex", "GRCh37", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2016.01.21.Ensembl/GRCh37/Sequence/BWAIndex/genome",
+            Type.NGS);
+    FastaBean bean32 =
+        new FastaBean("Human", "Ensembl, GRCh38.78,  BowtieIndex", "GRCh38.78", "Homo_sapiens",
+            "/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Sequence/Bowtie2Index:/lustre_cfc/qbic/reference_genomes/Homo_sapiens/DNA/2014.11.17.Ensembl/GRCH38.78/Annotation/Genes/genes.gtf",
+            Type.NGS);
 
     proteomicsSource.put(bean1.getDescription(), bean1);
     proteomicsSource.put(bean3.getDescription(), bean3);
@@ -146,6 +154,8 @@ public class FastaDB {
     ngsSource.put(bean8.getDescription(), bean8);
     ngsSource.put(bean9.getDescription(), bean9);
     ngsSource.put(bean23.getDescription(), bean23);
+    ngsSource.put(bean31.getDescription(), bean31);
+    ngsSource.put(bean32.getDescription(), bean32);
 
     // bwa indices
     bwaSource.put(bean12.getDescription(), bean12);
