@@ -3,6 +3,23 @@ package fasta;
 import java.io.Serializable;
 
 public class FastaBean implements Serializable {
+  public enum DetailedType {
+    WholeGenomeFasta("Whole Genome Fasta"), BowtieIndex("Bowtie Index"), BWAIndex(
+        "BWA Index"), shRNALibrary(
+            "shRNA Library"), shRNABarcodes("shRNA Barcode"), Proteome("Proteome");
+
+    private DetailedType(String name) {
+      this.name = name;
+    }
+
+    private final String name;
+
+    public String toString() {
+      return name;
+    }
+  };
+
+
   public enum Type {
     NGS, Misc, Proteomics, Transcriptomics, Metabolomics
   };
@@ -13,22 +30,23 @@ public class FastaBean implements Serializable {
   private static final long serialVersionUID = 6711508752415367451L;
 
   private String description;
-
   private String name;
   private String version;
   private String species;
   private String path;
-  private Type type;
+  private Type omicsType;
+  private DetailedType detailedType;
+  private String date;
 
   public FastaBean(String name, String description, String version, String species, String path,
-      Type type) {
+      Type omicsType) {
     super();
     this.description = description;
     this.name = name;
     this.version = version;
     this.species = species;
     this.path = path;
-    this.type = type;
+    this.omicsType = omicsType;
   }
 
   public FastaBean() {
@@ -75,17 +93,33 @@ public class FastaBean implements Serializable {
     this.path = path;
   }
 
-  public Type getType() {
-    return type;
+  public Type getOmicsType() {
+    return omicsType;
   }
 
-  public void setType(Type type) {
-    this.type = type;
+  public void setOmicsType(Type omicsType) {
+    this.omicsType = omicsType;
+  }
+
+  public DetailedType getDetailedType() {
+    return detailedType;
+  }
+
+  public void setDetailedType(DetailedType detailedType) {
+    this.detailedType = detailedType;
+  }
+
+  public String getDate() {
+    return date;
+  }
+
+  public void setDate(String date) {
+    this.date = date;
   }
 
   @Override
   public String toString() {
     return "FastaBean [name=" + name + ", version=" + version + ", " + "species=" + species
-        + ", path=" + path + "type= " + type + "]";
+        + ", path=" + path + "type= " + omicsType + " detailedType= " + detailedType + "]";
   }
 }

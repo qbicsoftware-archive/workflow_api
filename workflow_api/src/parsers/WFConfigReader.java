@@ -1,10 +1,5 @@
 package parsers;
 
-import guse.workflowrepresentation.GuseNode;
-import guse.workflowrepresentation.GuseWorkflowRepresentation;
-import guse.workflowrepresentation.InputPort;
-import guse.workflowrepresentation.InputPort.Type;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -16,6 +11,10 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import guse.workflowrepresentation.GuseNode;
+import guse.workflowrepresentation.GuseWorkflowRepresentation;
+import guse.workflowrepresentation.InputPort;
+import guse.workflowrepresentation.InputPort.Type;
 import submitter.parameters.BooleanParameter;
 import submitter.parameters.FileListParameter;
 import submitter.parameters.FileParameter;
@@ -28,9 +27,7 @@ public class WFConfigReader {
 
   public static void main(String[] args) throws Exception {
     WFConfigReader c = new WFConfigReader();
-    GuseWorkflowRepresentation gwfr =
-        c.read(new File(
-            "/Users/mohr/Documents/PhD/projects/eclipse_workspace/WorkflowMockUp/test/com/example/workflowmockup/wfconfigs/new_testworkflow.config"));
+    GuseWorkflowRepresentation gwfr = c.read(new File("/path/to/test/config.config"));
     System.out.println(gwfr);
   }
 
@@ -131,8 +128,8 @@ public class WFConfigReader {
               for (int jjj = 0; jjj < paramRange.length(); jjj++)
                 fileRange.add(paramRange.getString(jjj));
 
-              FileParameter fileParam =
-                  new FileParameter(paramName, paramDescription, false, isRequired, null, fileRange);
+              FileParameter fileParam = new FileParameter(paramName, paramDescription, false,
+                  isRequired, null, fileRange);
               fileParam.setValue(paramDefaultFile);
               paramMap.put(paramName, fileParam);
               break;
@@ -148,9 +145,8 @@ public class WFConfigReader {
               for (int jjj = 0; jjj < paramRange.length(); jjj++)
                 fileListRange.add(paramRange.getString(jjj));
 
-              FileListParameter fileListParam =
-                  new FileListParameter(paramName, paramDescription, false, isRequired, null,
-                      fileListRange);
+              FileListParameter fileListParam = new FileListParameter(paramName, paramDescription,
+                  false, isRequired, null, fileListRange);
               fileListParam.setValue(fileListDefault);
               paramMap.put(paramName, fileListParam);
               break;
@@ -162,9 +158,8 @@ public class WFConfigReader {
               for (int jjj = 0; jjj < paramRange.length(); jjj++)
                 intRange.add(paramRange.getInt(jjj));
 
-              IntParameter integerParam =
-                  new IntParameter(paramName, paramDescription, false, isRequired, intRange.get(0),
-                      intRange.get(1));
+              IntParameter integerParam = new IntParameter(paramName, paramDescription, false,
+                  isRequired, intRange.get(0), intRange.get(1));
               integerParam.setValue(Integer.parseInt(paramDefaultInt));
               paramMap.put(paramName, integerParam);
               break;
@@ -184,9 +179,8 @@ public class WFConfigReader {
               for (int jjj = 0; jjj < paramRange.length(); jjj++)
                 fltRange.add((float) paramRange.getDouble(jjj));
 
-              FloatParameter floatParam =
-                  new FloatParameter(paramName, paramDescription, false, isRequired,
-                      fltRange.get(0), fltRange.get(1));
+              FloatParameter floatParam = new FloatParameter(paramName, paramDescription, false,
+                  isRequired, fltRange.get(0), fltRange.get(1));
               floatParam.setValue(Float.parseFloat(paramDefaultFloat));
               paramMap.put(paramName, floatParam);
               break;
@@ -207,9 +201,8 @@ public class WFConfigReader {
               break;
           }
         }
-        InputPort newInputPort =
-            new InputPort(inputPortName, inputPortDescription, inputPortNumber, paramMap,
-                inputPortType);
+        InputPort newInputPort = new InputPort(inputPortName, inputPortDescription, inputPortNumber,
+            paramMap, inputPortType);
         inputPortMap.put(inputPortName, newInputPort);
       }
       // TODO fill parameter map here ?
@@ -223,8 +216,8 @@ public class WFConfigReader {
       workflowNodes.put(nodeName, newNode);
     }
     GuseWorkflowRepresentation guseWorkflow =
-        new GuseWorkflowRepresentation(id, workflowName, workflowDescription, workflowVersion,
-            null, null, workflowExperimentType, workflowSampleType);
+        new GuseWorkflowRepresentation(id, workflowName, workflowDescription, workflowVersion, null,
+            null, workflowExperimentType, workflowSampleType);
     guseWorkflow.setNodes(workflowNodes);
     guseWorkflow.setDirectory(workflowFileDirectory);
     return guseWorkflow;

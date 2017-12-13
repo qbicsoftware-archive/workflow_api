@@ -47,6 +47,10 @@
 				<!--logging -->
 		<dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.2" />
   		<dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.2" />
+  		
+  		<!-- qbic -->
+  		<dependency org="life.qbic.openbis" name="liferayandvaadinhelpers" rev="1.1.3-SNAPSHOT" />
+  		
 			
 	</dependencies>
 </ivy-module>
