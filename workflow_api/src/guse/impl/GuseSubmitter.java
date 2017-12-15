@@ -1,8 +1,5 @@
 package guse.impl;
 
-import guse.remoteapi.GuseRemoteApi;
-import guse.workflowrepresentation.GuseWorkflowRepresentation;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -13,17 +10,18 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import logging.Log4j2Logger;
-
 import org.apache.commons.lang.NotImplementedException;
 
+import com.genericworkflownodes.knime.config.reader.InvalidCTDFileException;
+import com.vaadin.data.util.BeanItemContainer;
+
+import guse.remoteapi.GuseRemoteApi;
+import guse.workflowrepresentation.GuseWorkflowRepresentation;
+import logging.Log4j2Logger;
 import parsers.WFConfigReader;
 import submitter.SubmitFailedException;
 import submitter.Submitter;
 import submitter.Workflow;
-
-import com.genericworkflownodes.knime.config.reader.InvalidCTDFileException;
-import com.vaadin.data.util.BeanItemContainer;
 
 public class GuseSubmitter implements Submitter {
   private logging.Logger LOGGER = new Log4j2Logger(GuseSubmitter.class);
@@ -48,19 +46,16 @@ public class GuseSubmitter implements Submitter {
 
     File tmpguseWorkflow = null;
     try {
-      tmpguseWorkflow =
-          guseWorkflowFileSystem.GuseWorkflowRepresentationToGuseConverter(
-              (GuseWorkflowRepresentation) workflow, foreignID, user);
+      tmpguseWorkflow = guseWorkflowFileSystem.GuseWorkflowRepresentationToGuseConverter(
+          (GuseWorkflowRepresentation) workflow, foreignID, user);
     } catch (IOException | InvalidCTDFileException e) {
       throw new SubmitFailedException(e.getMessage());
     }
     String runId = guseRemoteApi.submit(tmpguseWorkflow, guseWorkflowFileSystem.getCertificate());
     if (runId.isEmpty() || runId.equals("FALSE")) {
-      throw new SubmitFailedException(
-          "Submission failed.\nGuse returned: "
-              + runId
-              + "\nCheck guse logs for more information.\nHint: if no return code avialable, then guse has to be initialized probably.\n tmp guse Folder is: "
-              + tmpguseWorkflow.getAbsolutePath());
+      throw new SubmitFailedException("Submission failed.\nGuse returned: " + runId
+          + "\nCheck guse logs for more information.\nHint: if no return code avialable, then guse has to be initialized probably.\n tmp guse Folder is: "
+          + tmpguseWorkflow.getAbsolutePath());
 
     }
 
@@ -99,15 +94,15 @@ public class GuseSubmitter implements Submitter {
   }
 
   @Override
-  public void abort(String id) throws NoSuchElementException, ConnectException,
-      IllegalStateException {
+  public void abort(String id)
+      throws NoSuchElementException, ConnectException, IllegalStateException {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
-  public Set<Workflow> available(int page, String sortKey) throws IllegalArgumentException,
-      IOException {
+  public Set<Workflow> available(int page, String sortKey)
+      throws IllegalArgumentException, IOException {
     if (!guseWorkflowFileSystem.isAvailable()) {
       throw new ConnectException(
           "guse workflows not available. Check whether certificate is in the right place and guse workflow directory is set correctly.");

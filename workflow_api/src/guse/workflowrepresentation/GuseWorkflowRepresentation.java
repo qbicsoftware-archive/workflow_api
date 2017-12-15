@@ -1,7 +1,5 @@
 package guse.workflowrepresentation;
 
-import guse.workflowrepresentation.InputPort.Type;
-
 import java.io.File;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -12,13 +10,14 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang.NotImplementedException;
 
+import de.uni_tuebingen.qbic.guseWorkflowBeans.Workflow;
+import guse.workflowrepresentation.InputPort.Type;
 import submitter.Node;
 import submitter.parameters.FileListParameter;
 import submitter.parameters.FileParameter;
 import submitter.parameters.InputList;
 import submitter.parameters.Parameter;
 import submitter.parameters.ParameterSet;
-import de.uni_tuebingen.qbic.guseWorkflowBeans.Workflow;
 
 public class GuseWorkflowRepresentation extends submitter.Workflow {
 
@@ -111,25 +110,25 @@ public class GuseWorkflowRepresentation extends submitter.Workflow {
   @Override
   public void setData(InputList data) {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
   public Map<String, List<SimpleEntry<String, String>>> getParameterToNodesMapping() {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
   public void setParameterToNodesMapping(
       Map<String, List<SimpleEntry<String, String>>> parameterToNodesMapping) {
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
   public void setPathOfInput(String fullPath) {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override

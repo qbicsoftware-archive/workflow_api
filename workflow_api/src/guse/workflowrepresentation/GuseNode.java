@@ -1,7 +1,5 @@
 package guse.workflowrepresentation;
 
-import guse.workflowrepresentation.InputPort.Type;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -12,6 +10,7 @@ import java.util.Set;
 import org.apache.commons.lang.NotImplementedException;
 import org.json.JSONObject;
 
+import guse.workflowrepresentation.InputPort.Type;
 import submitter.parameters.Parameter;
 
 public class GuseNode extends submitter.Node {
@@ -106,25 +105,25 @@ public class GuseNode extends submitter.Node {
   @Override
   public Map<String, Parameter> getParams() {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
   public void setParams(Map<String, Parameter> params) {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
   public String asXML() {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
   public JSONObject asJSON() {
     // TODO Auto-generated method stub
-    throw new NotImplementedException();
+    throw new NotImplementedException("Not implemented.");
   }
 
   @Override
