@@ -11,13 +11,13 @@ public class WorkflowMonitorBean implements Serializable {
   private static final long serialVersionUID = 8968460328493605874L;
   private String workflow;
   private String status;
-  private float progress;
+  private double progress;
   private String version;
   private String executedBy;
   private String startedAt;
   private String experiment;
 
-  public WorkflowMonitorBean(String workflow, String status, float progress, String version,
+  public WorkflowMonitorBean(String workflow, String status, double progress, String version,
       String executedBy, String startedAt, String experimentCode) {
     super();
     this.workflow = workflow;
@@ -45,11 +45,11 @@ public class WorkflowMonitorBean implements Serializable {
     this.status = status;
   }
 
-  public float getProgress() {
+  public double getProgress() {
     return progress;
   }
 
-  public void setProgress(float progress) {
+  public void setProgress(double progress) {
     this.progress = progress;
   }
 
