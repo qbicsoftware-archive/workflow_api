@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import life.qbic.portal.liferayandvaadinhelpers.main.ConfigurationManager;
-import life.qbic.portal.liferayandvaadinhelpers.main.ConfigurationManagerFactory;
+import life.qbic.portal.utils.ConfigurationManager;
+import life.qbic.portal.utils.ConfigurationManagerFactory;
 import parsers.ReferenceConfigReader;
 
 

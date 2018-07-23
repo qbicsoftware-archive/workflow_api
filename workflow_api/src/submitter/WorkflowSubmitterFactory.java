@@ -5,7 +5,8 @@ import java.io.File;
 import guse.impl.GuseSubmitter;
 import guse.impl.GuseWorkflowFileSystem;
 import guse.remoteapi.GuseRemoteApi;
-import life.qbic.portal.liferayandvaadinhelpers.main.ConfigurationManager;
+import life.qbic.portal.utils.ConfigurationManager;
+
 
 public class WorkflowSubmitterFactory {
 
